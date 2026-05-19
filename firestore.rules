@@ -1,0 +1,145 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isAdmin() { 
+      return isSignedIn() && 
+             (exists(/databases/$(database)/documents/admins/$(request.auth.uid)) || request.auth.token.email == 'didhesaythatreally@gmail.com');
+    }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isVerifiedUser() { 
+      return isSignedIn() && (request.auth.token.email_verified == true || request.auth.token.email == 'didhesaythatreally@gmail.com'); 
+    }
+    function isNotBanned() {
+      return !exists(/databases/$(database)/documents/users/$(request.auth.uid)) || 
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('isBanned', false) == false;
+    }
+
+    // --- Entity Validation Blueprints ---
+
+    function isValidCreator(data) {
+      return data.keys().hasAll(['name', 'role']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.role is string && data.role.size() <= 100;
+    }
+
+    function isValidEvent(data) {
+      return data.keys().hasAll(['title', 'date', 'category']) &&
+             data.title is string && data.title.size() <= 300 &&
+             data.date is string && // Simplified for rule engine
+             data.category is string && data.category.size() <= 50;
+    }
+
+    function isValidEvidence(data) {
+      return data.keys().hasAll(['title', 'type', 'submittedBy', 'status']) &&
+             data.title is string && data.title.size() <= 500 &&
+             data.type in ['image', 'video', 'link', 'text', 'document'] &&
+             data.submittedBy is string && data.submittedBy.size() <= 128;
+    }
+
+    function isValidUserProfile(data) {
+      return data.keys().hasAll(['uid', 'username']) &&
+             data.uid == request.auth.uid &&
+             data.username is string && data.username.size() >= 3 && data.username.size() <= 30 &&
+             data.username.matches('^[a-zA-Z0-9_]+$');
+    }
+
+    function isValidReport(data) {
+      return data.keys().hasAll(['targetId', 'targetType', 'reason', 'reporterId', 'status', 'createdAt']) &&
+             data.targetId is string && data.targetId.size() <= 128 &&
+             data.targetType in ['evidence', 'comment'] &&
+             data.reason in ['copyright', 'doxxing', 'harassment', 'spam', 'other'] &&
+             data.reporterId == request.auth.uid &&
+             data.status == 'pending' &&
+             data.createdAt == request.time;
+    }
+
+    function isValidDossierProfile(data) {
+      return data.keys().hasAll(['name', 'role', 'status']) &&
+             data.name is string && data.name.size() > 0 &&
+             data.role in ['moderator', 'subject', 'community_member'] &&
+             data.status in ['active', 'monitored', 'pending'];
+    }
+
+    // --- Collections ---
+
+    match /creators/{creatorId} {
+      allow read: if true;
+      allow write: if isValidId(creatorId) && isAdmin();
+    }
+
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if isValidId(eventId) && isAdmin();
+    }
+
+    match /conflicts/{conflictId} {
+      allow read: if true;
+      allow write: if isValidId(conflictId) && isAdmin();
+    }
+
+    match /lawsuits/{lawsuitId} {
+      allow read: if true;
+      allow write: if isValidId(lawsuitId) && isAdmin();
+    }
+
+    match /evidence/{evidenceId} {
+      allow get, list: if isValidId(evidenceId) && (isAdmin() || resource.data.status == 'approved' || isOwner(resource.data.submittedBy));
+      
+      allow create: if isValidId(evidenceId) && isVerifiedUser() && isNotBanned() && isValidEvidence(incoming()) && incoming().status == 'pending' && incoming().submittedBy == request.auth.uid;
+      
+      allow update: if isValidId(evidenceId) && ((isAdmin()) || (
+        isValidEvidence(incoming()) && isNotBanned() && (
+          // Action: Upvote
+          (isSignedIn() && incoming().diff(existing()).affectedKeys().hasOnly(['votes']) && incoming().votes == existing().votes + 1) ||
+          // Action: Edit
+          (
+            isOwner(existing().submittedBy) && 
+            existing().status == 'pending' && 
+            incoming().status == 'pending' && 
+            incoming().submittedBy == existing().submittedBy &&
+            incoming().diff(existing()).affectedKeys().hasOnly(['title', 'description', 'url', 'tags'])
+          )
+        )
+      ));
+      
+      allow delete: if isValidId(evidenceId) && isAdmin();
+    }
+
+    match /users/{userId} {
+      // PII Protection: Only admins or the owner can read details. Others can only get for existence/id if public.
+      // But for this app, we'll restrict to isOwner or isAdmin to prevent email leak.
+      allow read: if isValidId(userId) && (isOwner(userId) || isAdmin());
+      allow create: if isValidId(userId) && isOwner(userId) && isValidUserProfile(incoming());
+      allow update: if isValidId(userId) && ((isAdmin()) || (isOwner(userId) && incoming().diff(existing()).affectedKeys().hasOnly(['username']) && isValidUserProfile(incoming())));
+    }
+
+    match /reports/{reportId} {
+      allow list: if isAdmin();
+      allow get: if isValidId(reportId) && (isAdmin() || isOwner(resource.data.reporterId));
+      allow create: if isValidId(reportId) && isSignedIn() && isNotBanned() && isValidReport(incoming());
+      allow update, delete: if isValidId(reportId) && isAdmin();
+    }
+
+    match /dossier/{profileId} {
+      allow read: if true;
+      allow create: if isValidId(profileId) && isVerifiedUser() && isNotBanned() && isValidDossierProfile(incoming()) && incoming().status == 'pending' && incoming().submittedBy == request.auth.uid;
+      allow update, delete: if isValidId(profileId) && isAdmin();
+    }
+
+    // Admin lookup collection (locked down)
+    match /admins/{adminId} {
+      allow read: if false; // Only exists() works in rules
+      allow write: if false;
+    }
+  }
+}

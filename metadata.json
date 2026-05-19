@@ -1,0 +1,6 @@
+{
+  "name": "The Saga of Ryan Upchurch",
+  "description": "An immersive interactive documentary platform and community archive exploring the rise, beefs, and controversies within the country rap scene.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

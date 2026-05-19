@@ -1,0 +1,167 @@
+{
+  "entities": {
+    "Creator": {
+      "title": "Creator",
+      "description": "A person or entity in the country rap scene.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "bio": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "role": { "type": "string" },
+        "socialLinks": { "type": "object" },
+        "isVerified": { "type": "boolean" }
+      },
+      "required": ["name", "role"]
+    },
+    "Event": {
+      "title": "Event",
+      "description": "A specific occurrence in the timeline.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "category": { "type": "string" },
+        "mediaUrls": { "type": "array", "items": { "type": "string" } },
+        "creatorIds": { "type": "array", "items": { "type": "string" } },
+        "conflictId": { "type": "string" },
+        "lawsuitId": { "type": "string" },
+        "sourceLinks": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "date", "category"]
+    },
+    "Conflict": {
+      "title": "Conflict",
+      "description": "A major beef or drama narrative.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "status": { "type": "string", "enum": ["ongoing", "resolved", "quiet"] },
+        "participants": { "type": "array", "items": { "type": "string" } },
+        "heroImage": { "type": "string" }
+      },
+      "required": ["name", "status"]
+    },
+    "Evidence": {
+      "title": "Evidence",
+      "description": "Community-submitted content for the archive.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "type": { "type": "string", "enum": ["image", "video", "link", "text", "document"] },
+        "url": { "type": "string" },
+        "submittedBy": { "type": "string" },
+        "submitterName": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "votes": { "type": "number" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "type", "submittedBy", "status"]
+    },
+    "Lawsuit": {
+      "title": "Lawsuit",
+      "description": "Legal case tracking.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "caseNumber": { "type": "string" },
+        "status": { "type": "string" },
+        "filings": { "type": "array" },
+        "participants": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["title", "status"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account information.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "karma": { "type": "number" },
+        "isAdmin": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username"]
+    },
+    "Report": {
+      "title": "Report",
+      "description": "User reported content violation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "targetId": { "type": "string" },
+        "targetType": { "type": "string", "enum": ["evidence", "comment"] },
+        "reason": { "type": "string", "enum": ["copyright", "doxxing", "harassment", "spam", "other"] },
+        "details": { "type": "string" },
+        "reporterId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "resolved"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["targetId", "targetType", "reason", "reporterId", "status"]
+    },
+    "DossierProfile": {
+      "title": "DossierProfile",
+      "description": "A community figure or administrator profile.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["moderator", "subject", "community_member"] },
+        "reportedActivities": { "type": "array", "items": { "type": "string" } },
+        "affiliations": { "type": "array", "items": { "type": "string" } },
+        "status": { "type": "string", "enum": ["active", "monitored", "pending"] },
+        "levelOfImpact": { "type": "number" },
+        "notes": { "type": "string" },
+        "submittedBy": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["name", "role", "status"]
+    }
+  },
+  "firestore": {
+    "creators": {
+      "schema": "Creator",
+      "description": "Public database of creators."
+    },
+    "events": {
+      "schema": "Event",
+      "description": "The timeline of events."
+    },
+    "conflicts": {
+      "schema": "Conflict",
+      "description": "Major beef tracking."
+    },
+    "evidence": {
+      "schema": "Evidence",
+      "description": "User submissions for investigations."
+    },
+    "lawsuits": {
+      "schema": "Lawsuit",
+      "description": "Legal archive."
+    },
+    "users": {
+      "schema": "UserProfile",
+      "description": "Private user profiles."
+    },
+    "reports": {
+      "schema": "Report",
+      "description": "Content violation reports."
+    },
+    "dossier": {
+      "schema": "DossierProfile",
+      "description": "Community intelligence folder."
+    }
+  }
+}
