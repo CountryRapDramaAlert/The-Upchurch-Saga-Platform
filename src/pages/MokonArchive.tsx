@@ -11,67 +11,67 @@ import {
 const MOKON_PLAYLIST = [
   { 
     id: 'bc6kpzzea5M', 
-    title: 'The Fall of the Hollar', 
+    title: 'Ryan Upchurch Diss 1', 
     type: 'Diss Track',
     description: 'A deep dive into the breakdown of the Hollar community and the beginning of the major rift with Upchurch. This track explores the initial cracks in the foundation of the crew.'
   },
   { 
     id: 'p5_HA1g6Y34', 
-    title: 'Ryan Upchurch Exposed', 
+    title: 'Upchurch Diss 2', 
     type: 'Reaction / Diss',
     description: 'Analyzing the contradictions and public statements made by Ryan Upchurch regarding his business dealings and personal relationships within the music industry.'
   },
   { 
     id: 'SE5BIFik-M4', 
-    title: 'The Truth About HHR', 
+    title: 'Upchurch Diss 3', 
     type: 'Expose',
     description: 'Critical investigation into the operations of HHR (Hollar Hood Records) and its impact on independent artists trying to make it in the southern rap scene.'
   },
   { 
     id: 'eA2vsig_pxU', 
-    title: 'Upchurch Drama Vol 1', 
+    title: 'Street Anthem', 
     type: 'Commentary',
     description: 'The first installment of a comprehensive series tracking the social media outbursts and public feuds that defined the early era of the conflict.'
   },
   { 
     id: 'p-CDJaXU_GI', 
-    title: 'Outlaw Culture Breakdown', 
+    title: 'Cryan UpSkirts', 
     type: 'Analysis',
     description: 'Evaluating how the "outlaw" image is used as a marketing tool and the reality behind the persona cultivated by major figures in the scene.'
   },
   { 
     id: 'LfoSbn1qF7U', 
-    title: 'Mokon vs Upchurch', 
+    title: 'Crackdown On CrackSquad', 
     type: 'Direct Diss',
     description: 'A direct lyrical and verbal response to the challenges issued by Ryan Upchurch in his recent live streams, setting the record straight from Mokon\'s perspective.'
   },
   { 
     id: '--Le2cNOCxo', 
-    title: 'Tweakerboys', 
+    title: 'TweakerBoys (Parody) (feat. Dagburn Johnny Goble)', 
     type: 'Parody / Diss',
     description: 'A parity remix of the song "Hollerboys" by Ryan Upchurch.'
   },
   { 
     id: 'idLKBW4GSXI', 
-    title: 'The Fallout Continues', 
+    title: 'CreekSquad Diss', 
     type: 'Updates',
     description: 'Documentation of the secondary conflicts and "side beefs" that emerged among associates as the central drama between the main players escalated.'
   },
   { 
     id: 'b67L6nPc0u0', 
-    title: 'Response to The Sage', 
+    title: 'Say My Name', 
     type: 'Response',
     description: 'Mokon addresses the specific points raised by other influential creators in the scene, consolidating the investigative narrative with new insights.'
   },
   { 
     id: '9rrhQ2JMGLE', 
-    title: 'Evidence Room Session', 
+    title: 'Call Me Crazy', 
     type: 'Evidence',
     description: 'A detailed breakdown of specific screenshots, recordings, and digital footprints shared by former associates to verify the claims being made.'
   },
   { 
     id: '_iOzB55xiFs', 
-    title: 'Final Verdict', 
+    title: 'Too Much Thought', 
     type: 'Summary',
     description: 'Wrapping up the extensive investigation with a summary of the collective evidence and an analysis of the current standing of the southern outlaw rap scene.'
   },

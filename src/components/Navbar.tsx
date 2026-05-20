@@ -10,7 +10,7 @@ import { useAuthStore } from '../store/useAuthStore';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const { user, profile, signIn, logout } = useAuthStore();
+  const { user, profile, signIn, logout, setShowLoginModal } = useAuthStore();
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
@@ -81,7 +81,7 @@ export default function Navbar() {
               </div>
             ) : (
               <button 
-                onClick={() => signIn()}
+                onClick={() => setShowLoginModal(true)}
                 className="flex items-center gap-1.5 px-4 py-1.5 bg-brand/15 hover:bg-brand/25 text-brand border border-brand/35 rounded-md text-sm font-bold transition-all hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]"
               >
                 <User className="w-4 h-4" />
@@ -148,7 +148,7 @@ export default function Navbar() {
                 <div className="pt-4 border-t border-white/10 mt-4 px-3">
                   <button 
                     onClick={() => {
-                      signIn();
+                      setShowLoginModal(true);
                       setIsOpen(false);
                     }}
                     className="w-full py-2 bg-brand/10 hover:bg-brand/20 text-brand font-bold rounded-md border border-brand/20 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"

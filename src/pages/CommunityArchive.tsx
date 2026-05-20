@@ -13,7 +13,7 @@ import { addDoc, collection, doc, updateDoc, deleteDoc, serverTimestamp, query, 
 import { db } from '../lib/firebase';
 
 export default function CommunityArchive() {
-  const { user, profile, signIn } = useAuthStore();
+  const { user, profile, signIn, setShowLoginModal } = useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState<'approved' | 'pending' | 'reports'>('approved');
@@ -97,7 +97,7 @@ export default function CommunityArchive() {
   };
 
   const handleVote = async (id: string, authorId: string) => {
-    if (!user) return signIn();
+    if (!user) return setShowLoginModal(true);
     try {
       await updateDoc(doc(db, 'evidence', id), {
         votes: increment(1)
@@ -314,7 +314,7 @@ export default function CommunityArchive() {
            </div>
 
            <button 
-             onClick={() => user ? setShowForm(!showForm) : signIn()}
+             onClick={() => user ? setShowForm(!showForm) : setShowLoginModal(true)}
              className="px-8 py-3 bg-brand text-white text-[10px] font-black uppercase tracking-[0.4em] italic hover:bg-brand-dark transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(183,14,35,0.2)]"
            >
              {showForm ? <X size={16} /> : <Upload size={16} />}
