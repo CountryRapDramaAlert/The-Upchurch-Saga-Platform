@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Play, History, MessageSquare, ShieldAlert, ChevronRight, TrendingUp, AlertCircle, Scale, ImageIcon, Flame, Radio, Map, Archive, Activity, User, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import UplinkMediaPlayer from '../components/UplinkMediaPlayer';
 
 export default function Home() {
   const trendingDrama = [
@@ -93,18 +94,18 @@ export default function Home() {
       </aside>
 
       {/* Main Panel: Interactive Space */}
-      <main className="flex-1 relative flex flex-col overflow-hidden">
+      <main className="flex-1 relative flex flex-col overflow-y-auto no-scrollbar">
         {/* Background Ambient Video/Effect */}
         <div className="absolute inset-x-0 top-0 bottom-0 pointer-events-none overflow-hidden opacity-40">
            <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black z-10" />
            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1549675584-91f19337af3d?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center grayscale contrast-125 brightness-50 blur-sm" />
         </div>
 
-        <div className="relative z-20 flex-1 flex flex-col justify-center items-center p-12 text-center">
+        <div className="relative z-20 flex-1 flex flex-col justify-start items-center p-6 md:p-12 text-center space-y-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="max-w-4xl"
+            className="max-w-4xl mt-6 lg:mt-12"
           >
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-sm border border-brand/30 bg-brand/5 text-brand text-[10px] font-black uppercase tracking-[0.4em] mb-8 animate-pulse">
               <AlertCircle size={14} /> PREVIEW_MODE_ACTIVE
@@ -128,6 +129,15 @@ export default function Home() {
                 WAR_ROOM_ACCESS
               </Link>
             </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="w-full max-w-5xl"
+          >
+            <UplinkMediaPlayer />
           </motion.div>
         </div>
 

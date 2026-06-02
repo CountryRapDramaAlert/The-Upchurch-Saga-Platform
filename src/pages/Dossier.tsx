@@ -10,16 +10,20 @@ import { collection, query, getDocs, addDoc, orderBy, where, Timestamp, deleteDo
 import { db } from '../lib/firebase';
 import { useAuthStore } from '../store/useAuthStore';
 import { DossierProfile } from '../types';
+import { getInitialLocalData, addLocalFallbackItem, deleteLocalFallbackItem } from '../hooks/useFirestore';
 
 export default function Dossier() {
   const { user, profile } = useAuthStore();
-  const [profiles, setProfiles] = useState<DossierProfile[]>([]);
+  const [profiles, setProfiles] = useState<DossierProfile[]>(() => {
+    return getInitialLocalData('dossier').filter(p => p.status !== 'pending');
+  });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | 'all'>('all');
   const [selectedProfile, setSelectedProfile] = useState<DossierProfile | null>(null);
   const [showSubmitModal, setShowSubmitModal] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [profileToDelete, setProfileToDelete] = useState<DossierProfile | null>(null);
 
   // Submission Form State
   const [newProfile, setNewProfile] = useState({
@@ -37,15 +41,28 @@ export default function Dossier() {
   }, []);
 
   const fetchProfiles = async () => {
+    setLoading(true);
     try {
       const q = query(collection(db, 'dossier'), where('status', '!=', 'pending'));
-      const snap = await getDocs(q);
-      const data = snap.docs.map(d => ({ ...d.data(), id: d.id } as DossierProfile));
+      const snap = await Promise.race([
+        getDocs(q),
+        new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+      ]);
+      const serverDocs = snap.docs.map(d => ({ ...d.data(), id: d.id } as DossierProfile));
+      const local = getInitialLocalData('dossier').filter(p => p.status !== 'pending');
       
-      // Sort in memory since where status != pending and orderby createAt might need index or behaves weird with multiple filters
-      setProfiles(data.sort((a, b) => b.levelOfImpact - a.levelOfImpact));
+      const merged = [...serverDocs];
+      for (const locItem of local) {
+        if (!merged.some(m => m.id === locItem.id || (m.name && m.name.toLowerCase() === locItem.name.toLowerCase()))) {
+          merged.push(locItem);
+        }
+      }
+      setProfiles(merged.sort((a, b) => b.levelOfImpact - a.levelOfImpact));
     } catch (err) {
-      console.error("Failed to fetch dossier:", err);
+      console.warn("Failed to fetch dossier from Firestore, engaging offline fallbacks:", err);
+      // Fallback
+      const local = getInitialLocalData('dossier').filter(p => p.status !== 'pending');
+      setProfiles(local.sort((a, b) => b.levelOfImpact - a.levelOfImpact));
     } finally {
       setLoading(false);
     }
@@ -54,7 +71,7 @@ export default function Dossier() {
   const handleSubmitProfile = async () => {
     if (!user) return;
     try {
-      await addDoc(collection(db, 'dossier'), {
+      const item = {
         name: newProfile.name,
         role: newProfile.role,
         reportedActivities: [...newProfile.activities, newProfile.activityInput].filter(Boolean),
@@ -64,12 +81,27 @@ export default function Dossier() {
         levelOfImpact: 0.1, // Initial impact for new submissions
         submittedBy: user.uid,
         createdAt: new Date().toISOString()
-      });
+      };
+
+      // Store in offline fallback
+      addLocalFallbackItem('dossier', item);
+
+      // Attempt cloud storage
+      try {
+        await Promise.race([
+          addDoc(collection(db, 'dossier'), item),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+      } catch (cloudErr) {
+        console.warn("Offline submission preserved locally:", cloudErr);
+      }
+
       setSubmitSuccess(true);
       setTimeout(() => {
         setShowSubmitModal(false);
         setSubmitSuccess(false);
         setNewProfile({ name: '', role: 'moderator', activityInput: '', activities: [], affiliationsInput: '', affiliations: [], notes: '' });
+        fetchProfiles();
       }, 2000);
     } catch (err) {
       console.error("Submission failed:", err);
@@ -77,24 +109,53 @@ export default function Dossier() {
     }
   };
 
-  const handleDeleteProfile = async (id: string) => {
-    if (!profile?.isAdmin) return;
-    if (!confirm("ARE YOU SURE YOU WANT TO PERMANENTLY REMOVE THIS PROFILE FROM THE DOSSIER?")) return;
-    try {
-      await deleteDoc(doc(db, 'dossier', id));
-      setProfiles(prev => prev.filter(p => p.id !== id));
+  const handleConfirmDelete = async () => {
+    if (!profileToDelete) return;
+    const { id, name } = profileToDelete;
+
+    // Offline resilient delete
+    deleteLocalFallbackItem('dossier', id || '', name);
+    setProfiles(prev => prev.filter(p => {
+      if (id && p.id === id) return false;
+      if (name && p.name.toLowerCase() === name.toLowerCase()) return false;
+      return true;
+    }));
+
+    if (selectedProfile && (
+      (id && selectedProfile.id === id) || 
+      (name && selectedProfile.name.toLowerCase() === name.toLowerCase())
+    )) {
       setSelectedProfile(null);
-    } catch (err) {
-      console.error("Delete failed:", err);
+    }
+    
+    setProfileToDelete(null);
+
+    if (id) {
+      try {
+        await Promise.race([
+          deleteDoc(doc(db, 'dossier', id)),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+      } catch (err) {
+        console.warn("Deleted locally. Server sync pending.", err);
+      }
     }
   };
 
-  const filteredProfiles = profiles.filter(p => {
+  const currentStack = profiles;
+
+  const filteredProfiles = currentStack.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                          p.affiliations.some(a => a.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesRole = selectedRole === 'all' || p.role === selectedRole;
     return matchesSearch && matchesRole;
   });
+
+  useEffect(() => {
+    if (filteredProfiles.length > 0 && !selectedProfile) {
+      setSelectedProfile(filteredProfiles[0]);
+    }
+  }, [filteredProfiles, selectedProfile]);
 
   return (
     <div className="min-h-full flex flex-col lg:flex-row lg:overflow-hidden bg-black/40">
@@ -159,12 +220,12 @@ export default function Dossier() {
                </button>
              </div>
              <div className="space-y-2">
-                {filteredProfiles.map((profile) => (
+                {filteredProfiles.map((p) => (
                   <button
-                    key={profile.id}
-                    onClick={() => setSelectedProfile(profile)}
+                    key={p.id}
+                    onClick={() => setSelectedProfile(p)}
                     className={`w-full text-left p-4 border transition-all group relative overflow-hidden ${
-                      selectedProfile?.id === profile.id
+                      selectedProfile?.id === p.id
                       ? 'bg-brand/10 border-brand/40'
                       : 'bg-zinc-950 border-white/5 hover:border-brand/30'
                     }`}
@@ -172,17 +233,31 @@ export default function Dossier() {
                     <div className="flex justify-between items-center relative z-10">
                        <div className="flex flex-col">
                           <span className={`text-[8px] font-black uppercase tracking-[0.2em] mb-1 ${
-                            profile.role === 'moderator' ? 'text-blue-500' : 'text-brand'
+                            p.role === 'moderator' ? 'text-blue-500' : 'text-brand'
                           }`}>
-                            {profile.role}
+                            {p.role}
                           </span>
                           <span className="text-xs font-black text-white italic uppercase tracking-tighter transition-colors group-hover:text-brand">
-                             {profile.name}
+                             {p.name}
                           </span>
                        </div>
-                       <div className={`w-1.5 h-1.5 rounded-full ${
-                         profile.status === 'active' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-zinc-800'
-                       }`} />
+                        <div className="flex items-center gap-2">
+                           <div className={`w-1.5 h-1.5 rounded-full ${
+                         p.status === 'active' ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-zinc-800'
+                           }`} />
+                           {profile?.isAdmin && (
+                             <button
+                               onClick={(e) => {
+                                 e.stopPropagation();
+                                 setProfileToDelete(p);
+                               }}
+                               className="p-1 text-zinc-500 hover:text-red-500 hover:bg-red-500/10 rounded-sm transition-all"
+                               title="PURGE_NODE"
+                             >
+                               <Trash2 size={12} />
+                             </button>
+                           )}
+                        </div>
                     </div>
                   </button>
                 ))}
@@ -305,7 +380,7 @@ export default function Dossier() {
                           
                           {profile?.isAdmin && (
                             <button 
-                              onClick={() => handleDeleteProfile(selectedProfile.id!)}
+                              onClick={() => setProfileToDelete(selectedProfile)}
                               className="w-full py-4 text-[10px] font-black text-red-500 bg-red-950/10 border border-red-500/20 hover:bg-red-500 hover:text-white transition-all uppercase tracking-widest flex items-center justify-center gap-2"
                             >
                                <Trash2 size={14} /> PURGE_NODE_FROM_DATABASE
@@ -426,6 +501,59 @@ export default function Dossier() {
                     </button>
                   </div>
                 )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Purge Profile Confirmation Modal */}
+      <AnimatePresence>
+        {profileToDelete && (
+          <div className="fixed inset-0 z-[101] flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="w-full max-w-sm bg-zinc-950 border border-red-500/30 p-8 space-y-6 relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-red-950/5 pointer-events-none" />
+              <div className="relative z-10 text-center space-y-6">
+                <div className="flex justify-center">
+                  <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-full text-red-500 animate-pulse">
+                    <ShieldAlert size={32} />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-lg font-black text-white italic uppercase tracking-tighter">CONFIRM_PURGE_SEQUENCE</h3>
+                  <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CRITICAL DATABASE OPERATION</p>
+                </div>
+
+                <div className="p-4 bg-red-950/10 border border-red-500/15 rounded-sm">
+                  <p className="text-[10px] font-mono text-red-400 uppercase tracking-wider mb-1">TARGET_NODE_IDENTIFIER</p>
+                  <p className="text-sm font-black text-white uppercase italic">{profileToDelete.name}</p>
+                  <p className="text-[9px] font-mono text-zinc-500 uppercase mt-2">Classified_As: {profileToDelete.role}</p>
+                </div>
+
+                <p className="text-[10px] text-zinc-450 leading-relaxed uppercase tracking-wide">
+                  This execution will permanently erase the node from the local memory bank & trigger server-sync deletion signals.
+                </p>
+
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <button
+                    onClick={() => setProfileToDelete(null)}
+                    className="py-3 text-[9px] font-black uppercase text-zinc-400 border border-white/5 hover:border-white/10 bg-white/5 transition-all"
+                  >
+                    CANCEL_OPERATION
+                  </button>
+                  <button
+                    onClick={handleConfirmDelete}
+                    className="py-3 text-[9px] font-black uppercase text-white bg-red-600 border border-red-500 hover:bg-red-700 hover:border-red-600 transition-all shadow-[0_0_15px_rgba(220,38,38,0.3)] animate-pulse"
+                  >
+                    PROCEED_WITH_PURGE
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>

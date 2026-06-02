@@ -97,3 +97,74 @@ export interface Report {
   status: 'pending' | 'resolved';
   createdAt: string;
 }
+
+// --- Live Stream Sync Interfaces ---
+export type LiveStreamStatus = 'queued' | 'ingesting' | 'transcribing' | 'analyzing' | 'live' | 'complete';
+
+export interface LiveStream {
+  id: string;
+  url: string;
+  videoId: string;
+  title: string;
+  creatorName: string;
+  category: string;
+  status: LiveStreamStatus;
+  createdAt: string;
+  communityConsensusScore: number; // 0 to 100
+  consensusAgreeCount: number;
+  consensusDisagreeCount: number;
+  dramaIntensity: number; // 0 to 100
+  heatMapData: { time: string; intensity: number }[]; // 10 points over video duration
+}
+
+export interface LiveTranscriptChunk {
+  id: string;
+  streamId: string;
+  timestamp: string;
+  timestampSeconds: number;
+  text: string;
+  speaker: string;
+}
+
+export type LiveStreamEventType = 
+  | 'contradiction' 
+  | 'narrative_shift' 
+  | 'accusation' 
+  | 'denial' 
+  | 'emotional_escalation' 
+  | 'alliance_mention' 
+  | 'repeated_talking_point' 
+  | 'possible_misinformation' 
+  | 'evidence_claim' 
+  | 'self_contradiction' 
+  | 'deflection' 
+  | 'topic_pivot' 
+  | 'hostile_escalation' 
+  | 'audience_manipulation';
+
+export interface LiveStreamAiEvent {
+  id: string;
+  streamId: string;
+  timestamp: string;
+  timestampSeconds: number;
+  type: LiveStreamEventType;
+  title: string;
+  severity: 'low' | 'medium' | 'high';
+  confidence: number; // 0 to 100
+  explanation: string;
+  snippet: string;
+  pinned?: boolean;
+  userFlaggedCount?: number;
+}
+
+export interface UserAnnotation {
+  id: string;
+  streamId: string;
+  timestamp: string;
+  timestampSeconds: number;
+  text: string;
+  userEmail: string;
+  userName: string;
+  votes: number;
+}
+

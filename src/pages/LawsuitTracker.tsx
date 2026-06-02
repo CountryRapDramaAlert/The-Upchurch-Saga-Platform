@@ -6,39 +6,57 @@ import {
   Gavel, User, Search
 } from 'lucide-react';
 import { Lawsuit } from '../types';
+import { useFirestoreCollection } from '../hooks/useFirestore';
 
 export default function LawsuitTracker() {
   const [search, setSearch] = useState('');
+  const { data: dbLawsuits } = useFirestoreCollection<Lawsuit>('lawsuits');
 
   const mockLawsuits: Lawsuit[] = [
     {
       id: 'ru-rodni-2023',
-      title: 'Robertson v. Upchurch (Kiely Rodni Case)',
+      title: 'Robertson & Rodni v. Ryan Upchurch (Kiely Rodni Case)',
       caseNumber: '3:23-CV-00770',
-      description: 'Defamation and libel lawsuit filed in the Middle District of Tennessee regarding statements made about the Kiely Rodni investigation. The court has allowed libel and defamation claims to proceed as of May 2024.',
-      status: 'Active / Discovery',
+      description: 'Defamation and intentional infliction of emotional distress federal complaint filed in Middle District of TN regarding streams accusing family members of recovering search hoax fraud and scamming GoFundMe pages. Underwent a landmark civil jury trial resulting in a historic $17.5 million damages award against Ryan Upchurch on May 19, 2026.',
+      status: 'Completed (Judgment Entered)',
       participants: ['Ryan Upchurch', 'David Robertson', 'Daniel Rodni', 'Federal Court System'],
       filings: [
-        { date: '2024-05-23', title: 'Order Allowing Defamation Claims to Proceed' },
-        { date: '2023-09-29', title: 'Case Formally Cataloged in Tennessee' },
-        { date: '2023-07-29', title: 'Initial Federal Complaint Filed' }
+        { date: '2026-05-19', title: 'Federal Jury Verdict: $17.5 Million Awarded to Plaintiffs' },
+        { date: '2026-05-12', title: 'Pre-Trial Deposition Contempt Filings Entered' },
+        { date: '2024-05-23', title: 'Order Overruling Motion to Dismiss, Defamation Allowed' }
       ]
     },
     {
-      id: 'ru-decker-2024',
-      title: 'Upchurch vs. Decker',
-      caseNumber: 'MT-882-99',
-      description: 'A significant legal dispute involving the Decker Music Group regarding intellectual property, distribution rights, and brand usage within the independent country rap sector.',
-      status: 'Settled',
-      participants: ['Ryan Upchurch', 'Decker Music Group'],
+      id: 'ru-leveille-2018',
+      title: 'Jacob LeVeille v. Ryan Upchurch (VARA Infringement)',
+      caseNumber: '3:18-CV-00812',
+      description: 'Federal property destruction and moral rights litigation brought by local visual designer under the Visual Artists Rights Act of 1990 (VARA) after Upchurch fired an assault rifle at custom-painted canvases on a public web livestream.',
+      status: 'Settled & Dismissed',
+      participants: ['Ryan Upchurch', 'Jacob LeVeille', 'Middle District of TN Court'],
       filings: [
-        { date: '2024-05-12', title: 'Final Settlement Entry' },
-        { date: '2024-03-15', title: 'Mediation Report' }
+        { date: '2019-10-15', title: 'Stipulant Joint Order of Dismissal with Prejudice' },
+        { date: '2019-02-04', title: 'Order Denying Motion for Summary Dismissal of VARA Claims' },
+        { date: '2018-09-12', title: 'Initial Federal Complaint Entered Under Section 106A' }
+      ]
+    },
+    {
+      id: 'ru-cmdshft-2025',
+      title: 'Upchurch v. cmdshft Distribution & Sonny Bama',
+      caseNumber: '1:25-CV-01104',
+      description: 'Corporate and trademark distribution fallout alleging identity theft, false trademark registration transfers, and Mastercard credit card royalty account fraud. Notable for ongoing friction surrounding leaked deposition transcripts.',
+      status: 'Active (Depositions)',
+      participants: ['Ryan Upchurch', 'Sonny Bama', 'cmdshft Distribution Systems'],
+      filings: [
+        { date: '2026-03-04', title: 'Order Imposing Penalty Fines Over Leaked Sealed Depositions' },
+        { date: '2026-02-12', title: 'Filing of Sealed Depositions & Protective Orders' },
+        { date: '2025-08-11', title: 'Original Complaint Entered' }
       ]
     }
   ];
 
-  const filtered = mockLawsuits.filter(l => 
+  const lawsuits = dbLawsuits && dbLawsuits.length > 0 ? dbLawsuits : mockLawsuits;
+
+  const filtered = lawsuits.filter(l => 
     l.title.toLowerCase().includes(search.toLowerCase()) || 
     l.caseNumber?.toLowerCase().includes(search.toLowerCase())
   );

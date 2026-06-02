@@ -128,6 +128,63 @@
         "createdAt": { "type": "string" }
       },
       "required": ["name", "role", "status"]
+    },
+    "LiveStream": {
+      "title": "LiveStream",
+      "description": "Submissions or active sync feeds for live/video analysis.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "url": { "type": "string" },
+        "videoId": { "type": "string" },
+        "title": { "type": "string" },
+        "creatorName": { "type": "string" },
+        "category": { "type": "string" },
+        "status": { "type": "string", "enum": ["queued", "ingesting", "transcribing", "analyzing", "live", "complete"] },
+        "createdAt": { "type": "string" },
+        "communityConsensusScore": { "type": "number" },
+        "consensusAgreeCount": { "type": "number" },
+        "consensusDisagreeCount": { "type": "number" },
+        "dramaIntensity": { "type": "number" },
+        "heatMapData": { "type": "array" }
+      },
+      "required": ["url", "videoId", "title", "creatorName", "status"]
+    },
+    "LiveStreamAiEvent": {
+      "title": "LiveStreamAiEvent",
+      "description": "An automated deep contradiction/narrative-shift analysis item detected on live transcript tracks.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "streamId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "timestampSeconds": { "type": "number" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+        "confidence": { "type": "number" },
+        "explanation": { "type": "string" },
+        "snippet": { "type": "string" },
+        "pinned": { "type": "boolean" },
+        "userFlaggedCount": { "type": "number" }
+      },
+      "required": ["streamId", "timestamp", "timestampSeconds", "type", "title", "severity", "confidence", "explanation", "snippet"]
+    },
+    "UserAnnotation": {
+      "title": "UserAnnotation",
+      "description": "Community manually-submitted timeline notes.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "streamId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "timestampSeconds": { "type": "number" },
+        "text": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "userName": { "type": "string" },
+        "votes": { "type": "number" }
+      },
+      "required": ["streamId", "timestamp", "timestampSeconds", "text"]
     }
   },
   "firestore": {
@@ -162,6 +219,18 @@
     "dossier": {
       "schema": "DossierProfile",
       "description": "Community intelligence folder."
+    },
+    "streams": {
+      "schema": "LiveStream",
+      "description": "Monitored narrative streams."
+    },
+    "ai_events": {
+      "schema": "LiveStreamAiEvent",
+      "description": "AI-detected livestream events."
+    },
+    "user_annotations": {
+      "schema": "UserAnnotation",
+      "description": "User timeline notes."
     }
   }
 }

@@ -28,6 +28,7 @@ interface MediaItem {
   status: 'available' | 'processing' | 'pending_verification';
   description?: string;
   externalUrl?: string; // Add external URL support
+  youtubeId?: string; // Support embedded YouTube playing
 }
 
 const mediaData: MediaItem[] = [
@@ -92,6 +93,54 @@ const mediaData: MediaItem[] = [
     thumbnail: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=2670&auto=format&fit=crop', 
     status: 'available'
   },
+  {
+    id: 'V-006',
+    title: 'Did He Say That: The Robertson/Rodni Case Retrospective',
+    type: 'video',
+    date: '2023-01-12',
+    category: 'Livestream Archives',
+    thumbnail: 'https://img.youtube.com/vi/XpDN4ZRctDM/mqdefault.jpg',
+    duration: '15:20',
+    status: 'available',
+    youtubeId: 'XpDN4ZRctDM',
+    description: 'An analytical compilation of early live streams concerning the Kiely Rodni search operations. Examines how the initial narrative speculation patterns developed into federal civil actions.'
+  },
+  {
+    id: 'V-007',
+    title: 'Behind the Scenes: cmdshft & Sonny Bama Royalty Conflict',
+    type: 'video',
+    date: '2026-02-14',
+    category: 'Legal & Court References',
+    thumbnail: 'https://img.youtube.com/vi/j2vouvpa9PI/mqdefault.jpg',
+    duration: '22:45',
+    status: 'available',
+    youtubeId: 'j2vouvpa9PI',
+    description: 'Detailed analysis of leaked deposition transcripts, unauthorized credit transfers, and intellectual property disputes between the Outlaw collective, cmdshft, and Bama.'
+  },
+  {
+    id: 'V-008',
+    title: 'Historic Verdict: Inside the $17.5M Defamation Judgment',
+    type: 'video',
+    date: '2026-05-19',
+    category: 'Commentary Channels',
+    thumbnail: 'https://img.youtube.com/vi/y9ZThcahQCA/mqdefault.jpg',
+    duration: '12:05',
+    status: 'available',
+    youtubeId: 'y9ZThcahQCA',
+    description: 'In-depth review of the federal jury’s historic civil verdict in Nashville, detailing the precedents set for online developer and creator content liability.'
+  },
+  {
+    id: 'V-009',
+    title: 'Uncompromising Truth: The Mokon Pioneer Chronicle',
+    type: 'video',
+    date: '2021-06-30',
+    category: 'Community Submissions',
+    thumbnail: 'https://img.youtube.com/vi/VAkHWmEhUr0/mqdefault.jpg',
+    duration: '08:50',
+    status: 'available',
+    youtubeId: 'VAkHWmEhUr0',
+    description: 'Archive detailing the historical 2021 response patterns. Documents the systematic community efforts to suppress digital accountability footprints.'
+  }
 ];
 
 export default function MediaVault() {
@@ -344,31 +393,45 @@ export default function MediaVault() {
                </div>
 
                {/* Left Segment: Visual/Media */}
-               <div className="lg:w-2/3 bg-black relative flex items-center justify-center group overflow-hidden">
-                  <img src={selectedItem.thumbnail} className="w-full h-full object-cover opacity-20 scale-125 blur-3xl" alt="" />
-                  <div className="absolute inset-x-0 top-0 p-12 flex justify-between items-start pointer-events-none">
-                     <div className="space-y-4">
-                        <div className="p-3 bg-brand text-white inline-block">
-                           <Play size={32} className="fill-white" />
-                        </div>
-                        <h2 className="text-4xl lg:text-7xl font-display font-black tracking-tighter uppercase italic leading-[0.8]">
-                           {selectedItem.title}
-                        </h2>
-                     </div>
-                  </div>
+               <div className="lg:w-2/3 bg-black relative flex items-center justify-center group overflow-hidden min-h-[300px] lg:min-h-0">
+                  {selectedItem.youtubeId ? (
+                    <div className="absolute inset-0 w-full h-full bg-black">
+                      <iframe
+                        src={`https://www.youtube.com/embed/${selectedItem.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+                        title={selectedItem.title}
+                        className="w-full h-full border-0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <img src={selectedItem.thumbnail} className="w-full h-full object-cover opacity-20 scale-125 blur-3xl" alt="" />
+                      <div className="absolute inset-x-0 top-0 p-12 flex justify-between items-start pointer-events-none">
+                         <div className="space-y-4">
+                            <div className="p-3 bg-brand text-white inline-block">
+                               <Play size={32} className="fill-white" />
+                            </div>
+                            <h2 className="text-4xl lg:text-7xl font-display font-black tracking-tighter uppercase italic leading-[0.8]">
+                               {selectedItem.title}
+                            </h2>
+                         </div>
+                      </div>
 
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
-                    <div className="w-24 h-24 rounded-full border-2 border-brand/20 flex items-center justify-center mb-8 relative">
-                       <div className="absolute inset-0 border-t-2 border-brand rounded-full animate-spin" />
-                       <ShieldCheck className="text-brand" size={40} />
-                    </div>
-                    <div className="space-y-4 max-w-md">
-                       <h4 className="text-xl font-display font-black uppercase text-white tracking-widest underline decoration-brand underline-offset-8">ENCRYPTION_LAYER_ENGAGED</h4>
-                       <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-[0.2em] leading-relaxed">
-                         PREVIEW_SESSION_LOCKED. FILE_REQUIRES_SECONDARY_DECRYPT_KEY_OR_DIRECT_NATIVE_ACCESS.
-                       </p>
-                    </div>
-                  </div>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-12">
+                        <div className="w-24 h-24 rounded-full border-2 border-brand/20 flex items-center justify-center mb-8 relative">
+                           <div className="absolute inset-0 border-t-2 border-brand rounded-full animate-spin" />
+                           <ShieldCheck className="text-brand" size={40} />
+                        </div>
+                        <div className="space-y-4 max-w-md">
+                           <h4 className="text-xl font-display font-black uppercase text-white tracking-widest underline decoration-brand underline-offset-8">ENCRYPTION_LAYER_ENGAGED</h4>
+                           <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-[0.2em] leading-relaxed">
+                             PREVIEW_SESSION_LOCKED. FILE_REQUIRES_SECONDARY_DECRYPT_KEY_OR_DIRECT_NATIVE_ACCESS.
+                           </p>
+                        </div>
+                      </div>
+                    </>
+                  )}
                </div>
 
                {/* Right Segment: Intel/Dossier */}

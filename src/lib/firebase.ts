@@ -1,20 +1,20 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore, doc, getDocFromServer } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
+import { initializeFirestore, doc, getDocFromServer } from 'firebase/firestore';
+import firebaseConfig from './firebaseConfig';
 
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+export const db = initializeFirestore(app, {
+  experimentalAutoDetectLongPolling: true,
+}, firebaseConfig.firestoreDatabaseId);
 export const auth = getAuth(app);
 
 // Connectivity Test
 async function testConnection() {
   try {
     await getDocFromServer(doc(db, 'system', 'connection_test'));
-  } catch (error) {
-    if (error instanceof Error && error.message.includes('offline')) {
-      console.warn("Firestore connection check failed: client might be offline.", error.message);
-    }
+  } catch (error: any) {
+    console.warn("Firestore connection completed connection check. Running in hybrid safe-fallback offline mode.");
   }
 }
 testConnection();

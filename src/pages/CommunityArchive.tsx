@@ -97,18 +97,16 @@ export default function CommunityArchive() {
   };
 
   const handleVote = async (id: string, authorId: string) => {
-    if (!user) return setShowLoginModal(true);
+    const hasVoted = localStorage.getItem(`voted_${id}`);
+    if (hasVoted) {
+      alert("You have already recorded your vote for this record.");
+      return;
+    }
     try {
       await updateDoc(doc(db, 'evidence', id), {
         votes: increment(1)
       });
-      try {
-        await updateDoc(doc(db, 'users', authorId), {
-          karma: increment(5)
-        });
-      } catch (e) {
-        console.warn("Could not award karma", e);
-      }
+      localStorage.setItem(`voted_${id}`, 'true');
     } catch (error) {
       console.error(error);
     }
@@ -116,7 +114,7 @@ export default function CommunityArchive() {
 
   const handleReportSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !reportingItem) return;
+    if (!reportingItem) return;
     
     setIsReporting(true);
     try {
@@ -125,13 +123,13 @@ export default function CommunityArchive() {
         targetType: 'evidence',
         reason: reportReason,
         details: reportDetails,
-        reporterId: user.uid,
+        reporterId: user?.uid || 'anonymous_reporter',
         status: 'pending',
         createdAt: serverTimestamp()
       });
       setReportingItem(null);
       setReportDetails('');
-      alert("Report submitted. Our moderation team will review this investigation shortly.");
+      alert("Report submitted. Our administration team will inspect this matter shortly.");
     } catch (error) {
       console.error(error);
     } finally {
@@ -157,7 +155,6 @@ export default function CommunityArchive() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) return;
     
     setIsSubmitting(true);
     try {
@@ -183,8 +180,8 @@ export default function CommunityArchive() {
         description,
         type,
         url,
-        submittedBy: user.uid,
-        submitterName: profile?.username || 'Anonymous',
+        submittedBy: user?.uid || 'anonymous_guest',
+        submitterName: profile?.username || 'Anonymous_Agent',
         status: 'pending',
         votes: 0,
         tags: tagList,
@@ -197,6 +194,7 @@ export default function CommunityArchive() {
       setUrl('');
       setTags('');
       setShowForm(false);
+      alert("Intel Pod Drop Successful! Your submission has been securely transmitted and is pending Administrator Review.");
     } catch (error) {
       console.error(error);
     } finally {
@@ -314,7 +312,7 @@ export default function CommunityArchive() {
            </div>
 
            <button 
-             onClick={() => user ? setShowForm(!showForm) : setShowLoginModal(true)}
+             onClick={() => setShowForm(!showForm)}
              className="px-8 py-3 bg-brand text-white text-[10px] font-black uppercase tracking-[0.4em] italic hover:bg-brand-dark transition-all flex items-center gap-3 shadow-[0_0_20px_rgba(183,14,35,0.2)]"
            >
              {showForm ? <X size={16} /> : <Upload size={16} />}

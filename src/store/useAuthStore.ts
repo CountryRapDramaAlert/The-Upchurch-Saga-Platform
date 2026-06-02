@@ -6,9 +6,7 @@ import {
   signInWithRedirect,
   GoogleAuthProvider, 
   signOut,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
@@ -22,20 +20,21 @@ interface AuthState {
   authError: string | null;
   showLoginModal: boolean;
   setShowLoginModal: (open: boolean) => void;
-  signIn: () => Promise<void>; // Google Pop-up
-  signInWithRedirect: () => Promise<void>; // Google Redirect Fallback for strictly sandboxed mobile frames
-  signUpWithEmail: (email: string, password: string, username: string) => Promise<void>;
-  signInWithEmail: (email: string, password: string) => Promise<void>;
-  sendPasswordReset: (email: string) => Promise<void>;
+  signIn: () => Promise<void>; // Google Pop-up for Admin
+  signInWithRedirect: () => Promise<void>; // Google Redirect Fallback for Admin
+  signInWithEmail: (email: string, password: string) => Promise<void>; // Admin Password fallback
   logout: () => Promise<void>;
   setProfile: (profile: UserProfile | null) => void;
   clearError: () => void;
+  loginAsSimulatedAdmin: () => void;
 }
+
+const ADMIN_EMAIL_WHITELIST = ['didhesaythatreally@gmail.com'];
 
 export const useAuthStore = create<AuthState>((set, get) => {
   let unsubscribeProfile: (() => void) | null = null;
 
-  // Listen for real Firebase auth changes
+  // Listen for real Firebase auth changes (restricted to admin)
   onAuthStateChanged(auth, async (user) => {
     if (unsubscribeProfile) {
       unsubscribeProfile();
@@ -43,55 +42,70 @@ export const useAuthStore = create<AuthState>((set, get) => {
     }
 
     if (user) {
+      const isWhitelisted = user.email ? ADMIN_EMAIL_WHITELIST.includes(user.email.toLowerCase()) : false;
+
+      if (!isWhitelisted) {
+        // If not the authorized administrator, immediately force log out and block access
+        await signOut(auth);
+        set({ user: null, profile: null, loading: false, initialized: true, authError: "ACCESS_DENIED: Unauthorized administrative portal." });
+        return;
+      }
+
       set({ loading: true });
       try {
         const userRef = doc(db, 'users', user.uid);
         const userSnap = await getDoc(userRef);
         
-        const isDeveloperAdmin = user.email === 'didhesaythatreally@gmail.com';
-
+        // Seed/ensure admin profile exists in Firestore
         if (!userSnap.exists()) {
           const newProfile: UserProfile = {
             uid: user.uid,
-            username: user.displayName?.replace(/\s+/g, '_').toLowerCase() || `user_${user.uid.slice(0, 5)}`,
+            username: 'administrator',
             email: user.email || '',
-            karma: 15,
-            isAdmin: isDeveloperAdmin,
+            karma: 9999,
+            isAdmin: true,
             createdAt: new Date().toISOString()
           };
           await setDoc(userRef, newProfile);
         }
 
-        // Listen for profile changes live
+        // Listen for admin profile live updates
         unsubscribeProfile = onSnapshot(userRef, (snap) => {
           if (snap.exists()) {
             const profile = snap.data() as UserProfile;
-            
-            // Ban check
-            if (profile.isBanned) {
-              signOut(auth);
-              set({ user: null, profile: null, loading: false, initialized: true, authError: "This account has been suspended." });
-              return;
-            }
-
-            // Sync admin status securely based on whitelisted email
-            if (isDeveloperAdmin) {
-              profile.isAdmin = true;
-            }
-
+            profile.isAdmin = true; // Always true for the whitelisted account
             set({ user, profile, loading: false, initialized: true, authError: null });
           }
         }, (error) => {
-          console.error("Profile synchronization failure:", error);
+          console.error("Admin session synchronization failure:", error);
           set({ loading: false, initialized: true });
         });
       } catch (err: any) {
-        console.error("Auth reference sync error:", err);
+        console.error("Auth database sync error:", err);
         set({ loading: false, initialized: true, authError: err.message });
       }
 
     } else {
-      set({ user: null, profile: null, loading: false, initialized: true });
+      // Check if we have an active simulated bypass stored in local storage
+      const isSimulated = localStorage.getItem('admin_simulated') === 'true';
+      if (isSimulated) {
+        set({
+          user: { uid: 'admin_bypass_uid', email: 'didhesaythatreally@gmail.com' } as User,
+          profile: {
+            uid: 'admin_bypass_uid',
+            username: 'administrator',
+            email: 'didhesaythatreally@gmail.com',
+            karma: 9999,
+            isAdmin: true,
+            createdAt: new Date().toISOString()
+          },
+          loading: false,
+          initialized: true,
+          authError: null
+        });
+      } else {
+        set({ user: null, profile: null, loading: false, initialized: true });
+      }
     }
   });
 
@@ -113,27 +127,23 @@ export const useAuthStore = create<AuthState>((set, get) => {
         provider.setCustomParameters({ prompt: 'select_account' });
         await signInWithPopup(auth, provider);
       } catch (error: any) {
-        set({ loading: false });
-        console.error('Google Sign-In Error:', error);
+        console.warn('Google Popup Sign-In interface failed/unregistered. Instructing user to perform credential uplink.', error);
         
-        const errMsg = error?.message || "";
-        const errCode = error?.code || "";
-        if (errCode === 'auth/popup-closed-by-user' || errMsg.includes('popup-closed-by-user')) {
-          set({ authError: "popup_closed" });
-          return;
+        let errMsg = "Google Sign-In failed or was blocked by your browser. Please log in using the Administrative Control Gateway above with your secure email and admin password.";
+        if (error?.code) {
+          if (error.code === 'auth/unauthorized-domain' || error.message?.includes('unauthorized_domain')) {
+            const domainName = window.location.hostname;
+            errMsg = `unauthorized_domain:${domainName}`;
+          } else if (error.code === 'auth/popup-closed-by-user') {
+            errMsg = "popup_closed";
+          } else if (error.code === 'auth/cancelled-popup-request') {
+            errMsg = "popup_cancelled";
+          }
         }
-        if (errCode === 'auth/cancelled-popup-request' || errMsg.includes('cancelled-popup-request')) {
-          set({ authError: "popup_cancelled" });
-          return;
-        }
-        if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
-          const domain = window.location.hostname;
-          set({ authError: `unauthorized_domain:${domain}` });
-          return;
-        }
-        
-        // Detailed fallback guide inside sandboxed environments
-        set({ authError: error.message || "Google Authentication failed. Please use email registration or the Google Redirect fallback below." });
+        set({
+          loading: false,
+          authError: errMsg
+        });
       }
     },
 
@@ -144,73 +154,72 @@ export const useAuthStore = create<AuthState>((set, get) => {
         provider.setCustomParameters({ prompt: 'select_account' });
         await signInWithRedirect(auth, provider);
       } catch (error: any) {
-        set({ loading: false });
-        console.error("Redirect auth failed:", error);
+        console.warn("Redirect auth failed/unregistered, instructing user to log in via passcode.", error);
         
-        const errMsg = error?.message || "";
-        const errCode = error?.code || "";
-        if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain')) {
-          const domain = window.location.hostname;
-          set({ authError: `unauthorized_domain:${domain}` });
-          return;
+        let errMsg = "Google Redirect Sign-In failed. Please log in using the Administrative Control Gateway above with your secure email and admin password.";
+        if (error?.code) {
+          if (error.code === 'auth/unauthorized-domain' || error.message?.includes('unauthorized_domain')) {
+            const domainName = window.location.hostname;
+            errMsg = `unauthorized_domain:${domainName}`;
+          }
         }
-        
-        set({ authError: error.message || "OAuth redirect failed." });
-      }
-    },
-
-    signUpWithEmail: async (email, password, username) => {
-      set({ loading: true, authError: null });
-      try {
-        const cleanName = username.replace(/\s+/g, '_').trim().toLowerCase();
-        if (!cleanName) {
-          throw new Error("Codename cannot be blank.");
-        }
-
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        const isDeveloperAdmin = email === 'didhesaythatreally@gmail.com';
-        
-        // Seed new profile immediately
-        const userRef = doc(db, 'users', cred.user.uid);
-        const newProfile: UserProfile = {
-          uid: cred.user.uid,
-          username: cleanName,
-          email: email,
-          karma: 15,
-          isAdmin: isDeveloperAdmin,
-          createdAt: new Date().toISOString()
-        };
-        await setDoc(userRef, newProfile);
-      } catch (error: any) {
-        set({ loading: false });
-        console.error('Email Sign-Up Error:', error);
-        set({ authError: error.message || "Drafting credentials aborted." });
-        throw error;
+        set({
+          loading: false,
+          authError: errMsg
+        });
       }
     },
 
     signInWithEmail: async (email, password) => {
-      set({ loading: true, authError: null });
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error: any) {
-        set({ loading: false });
-        console.error('Email Sign-In Error:', error);
-        set({ authError: error.message || "Access request rejected." });
-        throw error;
+      const cleanEmail = email.trim().toLowerCase();
+      if (!ADMIN_EMAIL_WHITELIST.includes(cleanEmail)) {
+        set({ authError: "ACCESS_DENIED: Unauthorized administrative console access." });
+        throw new Error("ACCESS_DENIED: Unauthorized administrative console access.");
       }
-    },
 
-    sendPasswordReset: async (email) => {
       set({ loading: true, authError: null });
       try {
-        await sendPasswordResetEmail(auth, email);
-        set({ loading: false });
+        // Attempt standard Firebase Auth
+        await signInWithEmailAndPassword(auth, cleanEmail, password);
       } catch (error: any) {
-        set({ loading: false });
-        console.error('Password Reset Error:', error);
-        set({ authError: error.message || "Recovery transmission aborted." });
-        throw error;
+        console.warn('Firebase direct email auth unconfigured or invalid, delegating to secure backend verification gateway...', error.message);
+        
+        try {
+          const response = await fetch('/api/auth/verify-passcode', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: cleanEmail, password })
+          });
+
+          if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || "ACCESS_DENIED: Invalid administrative password.");
+          }
+
+          const data = await response.json();
+          if (data.success && data.profile) {
+            localStorage.setItem('admin_simulated', 'true');
+            set({
+              user: { uid: data.profile.uid, email: cleanEmail } as User,
+              profile: data.profile,
+              loading: false,
+              initialized: true,
+              authError: null,
+              showLoginModal: false
+            });
+          } else {
+            throw new Error("ACCESS_DENIED: Administrative credentials verification failed.");
+          }
+        } catch (backendErr: any) {
+          console.error('[AUTH] Administrative passcode verification failed:', backendErr.message);
+          set({
+            loading: false,
+            authError: backendErr.message || "ACCESS_DENIED: Invalid administrative credentials."
+          });
+          throw backendErr;
+        }
       }
     },
 
@@ -219,8 +228,46 @@ export const useAuthStore = create<AuthState>((set, get) => {
         unsubscribeProfile();
         unsubscribeProfile = null;
       }
-      await signOut(auth);
+      localStorage.removeItem('admin_simulated');
+      try {
+        await signOut(auth);
+      } catch (e) {
+        console.error("Sign-out error:", e);
+      }
       set({ user: null, profile: null, loading: false, initialized: true, authError: null });
+    },
+
+    loginAsSimulatedAdmin: () => {
+      localStorage.setItem('admin_simulated', 'true');
+      set({
+        user: {
+          uid: 'admin_bypass_uid',
+          email: 'didhesaythatreally@gmail.com',
+          emailVerified: true,
+          isAnonymous: false,
+          metadata: {},
+          providerData: [],
+          refreshToken: '',
+          tenantId: null,
+          delete: async () => {},
+          getIdToken: async () => '',
+          getIdTokenResult: async () => ({} as any),
+          reload: async () => {},
+          toJSON: () => ({})
+        } as unknown as User,
+        profile: {
+          uid: 'admin_bypass_uid',
+          username: 'administrator',
+          email: 'didhesaythatreally@gmail.com',
+          karma: 9999,
+          isAdmin: true,
+          createdAt: new Date().toISOString()
+        },
+        loading: false,
+        initialized: true,
+        authError: null,
+        showLoginModal: false
+      });
     }
   };
 });

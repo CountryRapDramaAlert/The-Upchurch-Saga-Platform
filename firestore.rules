@@ -73,7 +73,58 @@ service cloud.firestore {
              data.status in ['active', 'monitored', 'pending'];
     }
 
+    function isValidStream(data) {
+      return data.keys().hasAll(['url', 'videoId', 'title', 'creatorName', 'status']) &&
+             data.url is string && data.url.size() <= 1000 &&
+             data.videoId is string && data.videoId.size() <= 100 &&
+             data.title is string && data.title.size() <= 300 &&
+             data.creatorName is string && data.creatorName.size() <= 200 &&
+             data.status in ['queued', 'ingesting', 'transcribing', 'analyzing', 'live', 'complete'];
+    }
+
+    function isValidAiEvent(data) {
+      return data.keys().hasAll(['streamId', 'timestamp', 'timestampSeconds', 'type', 'title', 'severity', 'confidence', 'explanation', 'snippet']) &&
+             data.streamId is string && data.streamId.size() <= 128 &&
+             data.timestamp is string && data.timestamp.size() <= 20 &&
+             data.timestampSeconds is number &&
+             data.type is string && data.type.size() <= 100 &&
+             data.title is string && data.title.size() <= 300 &&
+             data.severity in ['low', 'medium', 'high'] &&
+             data.confidence is number &&
+             data.explanation is string && data.explanation.size() <= 5000 &&
+             data.snippet is string && data.snippet.size() <= 5000;
+    }
+
+    function isValidUserAnnotation(data) {
+      return data.keys().hasAll(['streamId', 'timestamp', 'timestampSeconds', 'text']) &&
+             data.streamId is string && data.streamId.size() <= 128 &&
+             data.timestamp is string && data.timestamp.size() <= 20 &&
+             data.timestampSeconds is number &&
+             data.text is string && data.text.size() <= 2000;
+    }
+
     // --- Collections ---
+
+    match /streams/{streamId} {
+      allow read: if true;
+      allow create: if isValidId(streamId) && isSignedIn() && isNotBanned() && isValidStream(incoming());
+      allow update: if isValidId(streamId) && (isAdmin() || (isSignedIn() && isNotBanned() && isValidStream(incoming())));
+      allow delete: if isValidId(streamId) && isAdmin();
+    }
+
+    match /ai_events/{eventId} {
+      allow read: if true;
+      allow create: if isValidId(eventId) && (isAdmin() || (isSignedIn() && isNotBanned() && isValidAiEvent(incoming())));
+      allow update: if isValidId(eventId) && (isAdmin() || (isSignedIn() && isNotBanned() && (incoming().diff(existing()).affectedKeys().hasOnly(['userFlaggedCount', 'pinned']))));
+      allow delete: if isValidId(eventId) && isAdmin();
+    }
+
+    match /user_annotations/{annotationId} {
+      allow read: if true;
+      allow create: if isValidId(annotationId) && isSignedIn() && isNotBanned() && isValidUserAnnotation(incoming());
+      allow update: if isValidId(annotationId) && (isAdmin() || (isSignedIn() && isNotBanned() && (incoming().diff(existing()).affectedKeys().hasOnly(['votes']))));
+      allow delete: if isValidId(annotationId) && (isAdmin() || (isSignedIn() && resource.data.get('userEmail', '') == request.auth.token.email));
+    }
 
     match /creators/{creatorId} {
       allow read: if true;

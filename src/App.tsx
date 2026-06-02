@@ -18,6 +18,7 @@ import Policies from './pages/Policies';
 import WarRoom from './pages/WarRoom';
 import Dossier from './pages/Dossier';
 import AdminConsole from './pages/AdminConsole';
+import LiveStreamSync from './pages/LiveStreamSync';
 
 export default function App() {
   return (
@@ -34,8 +35,10 @@ export default function App() {
           <Route path="/map" element={<DramaMap />} />
           <Route path="/conspiracy" element={<DramaMap />} />
           <Route path="/war-room" element={<WarRoom />} />
+          <Route path="/livestream" element={<LiveStreamSync />} />
           <Route path="/archive" element={<CommunityArchive />} />
           <Route path="/policies" element={<Policies />} />
+          <Route path="/admin-login" element={<Home />} />
           <Route path="/admin-console" element={<AdminConsole />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

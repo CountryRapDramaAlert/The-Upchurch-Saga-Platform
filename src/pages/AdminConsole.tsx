@@ -11,6 +11,8 @@ import { db } from '../lib/firebase';
 import { useAuthStore } from '../store/useAuthStore';
 import { Navigate } from 'react-router-dom';
 import { UserProfile, Report, Evidence, DossierProfile } from '../types';
+import { seedFirestore } from '../utils/seeder';
+import { getInitialLocalData, updateLocalFallbackItem, deleteLocalFallbackItem } from '../hooks/useFirestore';
 
 type AdminTab = 'submissions' | 'reports' | 'users' | 'dossier';
 
@@ -37,47 +39,100 @@ export default function AdminConsole() {
     try {
       if (activeTab === 'users') {
         const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'), limit(100));
-        const snap = await getDocs(q);
+        const snap = await Promise.race([
+          getDocs(q),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
         setUsers(snap.docs.map(d => ({ ...d.data(), uid: d.id } as UserProfile)));
       } else if (activeTab === 'reports') {
         const q = query(collection(db, 'reports'), orderBy('createdAt', 'desc'));
-        const snap = await getDocs(q);
+        const snap = await Promise.race([
+          getDocs(q),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
         setReports(snap.docs.map(d => ({ ...d.data(), id: d.id } as Report)));
       } else if (activeTab === 'submissions') {
         const q = query(collection(db, 'evidence'), orderBy('createdAt', 'desc'));
-        const snap = await getDocs(q);
-        setSubmissions(snap.docs.map(d => ({ ...d.data(), id: d.id } as Evidence)));
+        const snap = await Promise.race([
+          getDocs(q),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+        const serverDocs = snap.docs.map(d => ({ ...d.data(), id: d.id } as Evidence));
+        const localEvidence = getInitialLocalData('evidence').filter((e: any) => e.status === 'pending');
+        
+        const merged = [...serverDocs];
+        for (const local of localEvidence) {
+          if (!merged.some(m => m.id === local.id || (m.title && m.title.toLowerCase() === local.title.toLowerCase()))) {
+            merged.push(local);
+          }
+        }
+        setSubmissions(merged);
       } else if (activeTab === 'dossier') {
         const q = query(collection(db, 'dossier'), where('status', '==', 'pending'));
-        const snap = await getDocs(q);
-        setDossierPending(snap.docs.map(d => ({ ...d.data(), id: d.id } as DossierProfile)));
+        const snap = await Promise.race([
+          getDocs(q),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+        const serverDocs = snap.docs.map(d => ({ ...d.data(), id: d.id } as DossierProfile));
+        const localDossier = getInitialLocalData('dossier').filter((d: any) => d.status === 'pending');
+        
+        const merged = [...serverDocs];
+        for (const local of localDossier) {
+          if (!merged.some(m => m.id === local.id || (m.name && m.name.toLowerCase() === local.name.toLowerCase()))) {
+            merged.push(local);
+          }
+        }
+        setDossierPending(merged);
       }
     } catch (err) {
-      console.error("Admin data fetch failed:", err);
+      console.warn("Admin data fetch failed from Firestore, loading local backups:", err);
+      if (activeTab === 'users') {
+        const cachedUsers = localStorage.getItem('firestore_fallback_users');
+        setUsers(cachedUsers ? JSON.parse(cachedUsers) : []);
+      } else if (activeTab === 'reports') {
+        const cachedReports = localStorage.getItem('firestore_fallback_reports');
+        setReports(cachedReports ? JSON.parse(cachedReports) : []);
+      } else if (activeTab === 'submissions') {
+        const localEvidence = getInitialLocalData('evidence');
+        setSubmissions(localEvidence.filter((e: any) => e.status === 'pending'));
+      } else if (activeTab === 'dossier') {
+        const localDossier = getInitialLocalData('dossier');
+        setDossierPending(localDossier.filter((d: any) => d.status === 'pending'));
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleUpdateDossier = async (id: string, status: 'active' | 'rejected') => {
+    // Offline resilient edit
+    if (status === 'rejected') {
+      deleteLocalFallbackItem('dossier', id);
+    } else {
+      updateLocalFallbackItem('dossier', id, { status: 'active', levelOfImpact: 0.1 });
+    }
+    setDossierPending(prev => prev.filter(p => p.id !== id));
+
     try {
       if (status === 'rejected') {
         await deleteDoc(doc(db, 'dossier', id));
       } else {
         await updateDoc(doc(db, 'dossier', id), { status: 'active', levelOfImpact: 0.1 });
       }
-      setDossierPending(prev => prev.filter(p => p.id !== id));
     } catch (err) {
-      console.error("Failed to update dossier status:", err);
+      console.warn("Failed to update dossier status on server, offline cache preserved:", err);
     }
   };
 
   const handleUpdateEvidence = async (id: string, status: 'approved' | 'rejected') => {
+    // Offline resilient edit
+    updateLocalFallbackItem('evidence', id, { status });
+    setSubmissions(prev => prev.map(s => s.id === id ? { ...s, status } : s));
+
     try {
       await updateDoc(doc(db, 'evidence', id), { status });
-      setSubmissions(prev => prev.map(s => s.id === id ? { ...s, status } : s));
     } catch (err) {
-      console.error("Failed to update status:", err);
+      console.warn("Failed to update evidence status on server, offline cache preserved:", err);
     }
   };
 
@@ -134,20 +189,39 @@ export default function AdminConsole() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          {(['submissions', 'reports', 'users', 'dossier'] as AdminTab[]).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-3 text-[10px] font-black uppercase tracking-widest border transition-all ${
-                activeTab === tab 
-                ? 'bg-brand text-white border-brand italic' 
-                : 'bg-white/5 text-zinc-500 border-white/5 hover:border-white/10'
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
+        <div className="flex items-center gap-4 flex-wrap">
+          <button
+            onClick={async () => {
+              if (window.confirm("ACTIVATE COGNITIVE TIMELINE SEED?\n\nThis will inject 8 high-fidelity approved timeline records, federal lawsuits, and active tracking dossiers into the database describing the Ryan Upchurch saga ($17.5M verdict, cmdshft/Sonny Bama fraud, LeVeille VARA lawsuit, Jelly Roll/Calhoun feuds, etc.).")) {
+                try {
+                  await seedFirestore();
+                  window.alert("DATABASE INTEL SEED COMPLETE: Timeline events, court lawsuits, and social graph dossiers loaded successfully!");
+                  fetchAdminData();
+                } catch (e: any) {
+                  window.alert(`SEED FAILURE: ${e.message}`);
+                }
+              }
+            }}
+            className="px-4 py-3 bg-zinc-950 hover:bg-yellow-500 hover:text-black border border-yellow-500/30 text-yellow-400 text-[10px] uppercase tracking-widest font-black transition-all flex items-center gap-2"
+          >
+             <RefreshCw size={12} /> SEED COGNITIVE INTEL DATA
+          </button>
+
+          <div className="flex items-center gap-2">
+            {(['submissions', 'reports', 'users', 'dossier'] as AdminTab[]).map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-6 py-3 text-[10px] font-black uppercase tracking-widest border transition-all ${
+                  activeTab === tab 
+                  ? 'bg-brand text-white border-brand italic' 
+                  : 'bg-white/5 text-zinc-500 border-white/5 hover:border-white/10'
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 

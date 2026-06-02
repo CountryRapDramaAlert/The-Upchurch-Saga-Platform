@@ -75,6 +75,30 @@ const MOKON_PLAYLIST = [
     type: 'Summary',
     description: 'Wrapping up the extensive investigation with a summary of the collective evidence and an analysis of the current standing of the southern outlaw rap scene.'
   },
+  { 
+    id: 'XpDN4ZRctDM', 
+    title: 'Did He Say That: The Robertson/Rodni Case Retrospective', 
+    type: 'Analysis',
+    description: 'A deep-dive analyzing the key statements and outrage-stream claims made regarding the Kiely Rodni search. Reconstructs how speculative public feeds laid the groundwork for the devastating defamation lawsuit.'
+  },
+  { 
+    id: 'j2vouvpa9PI', 
+    title: 'Behind the Scenes: cmdshft & Sonny Bama Royalty Conflict', 
+    type: 'Expose',
+    description: 'A crucial visual breakdown tracing the leaked deposition files and perjury scandals. Details the allegations of credit card fraud, Mastercard account maneuvers, and unauthorized transfer claims.'
+  },
+  { 
+    id: 'y9ZThcahQCA', 
+    title: 'Historic Verdict: Inside the $17.5M Defamation Judgment', 
+    type: 'Legal & Court',
+    description: 'Comprehensive legal and community commentary documenting the milestone civil jury decision in the Middle District of Tennessee, outlining how internet actors are legally held accountable for defamation and severe emotional distress.'
+  },
+  { 
+    id: 'VAkHWmEhUr0', 
+    title: 'Uncompromising Truth: The Mokon Pioneer Chronicle', 
+    type: 'Commentary',
+    description: 'Evaluating the long road of community accountability, comparing Mokon\'s early 2021 predictions with actual legal developments. Highlighting the heavy toll of resisting systematic online blackballing.'
+  },
 ];
 
 export default function MokonArchive() {

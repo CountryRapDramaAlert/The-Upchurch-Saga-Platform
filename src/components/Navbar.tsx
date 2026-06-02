@@ -68,8 +68,8 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-3">
                 <div className="text-right hidden lg:block">
-                  <p className="text-xs font-bold text-white leading-none">{profile?.username}</p>
-                  <p className="text-[10px] text-brand uppercase tracking-widest">{profile?.karma} Karma</p>
+                  <p className="text-xs font-bold text-white leading-none">@{profile?.username || 'admin'}</p>
+                  <p className="text-[10px] text-brand uppercase tracking-widest">ROOT_ACCESS</p>
                 </div>
                 <button 
                   onClick={() => logout()}
@@ -79,15 +79,7 @@ export default function Navbar() {
                   <LogOut className="w-4 h-4 text-gray-400 group-hover:text-brand" />
                 </button>
               </div>
-            ) : (
-              <button 
-                onClick={() => setShowLoginModal(true)}
-                className="flex items-center gap-1.5 px-4 py-1.5 bg-brand/15 hover:bg-brand/25 text-brand border border-brand/35 rounded-md text-sm font-bold transition-all hover:shadow-[0_0_15px_rgba(239,68,68,0.25)]"
-              >
-                <User className="w-4 h-4" />
-                Log In
-              </button>
-            )}
+            ) : null}
           </div>
 
           <div className="md:hidden flex items-center">
@@ -125,12 +117,12 @@ export default function Navbar() {
                 </Link>
               ))}
 
-              {user ? (
+              {user && (
                 <div className="pt-4 pb-2 border-t border-white/10 mt-4 px-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-bold text-white mb-0.5">{profile?.username}</p>
-                      <p className="text-[11px] text-brand uppercase tracking-wider">{profile?.karma} Karma</p>
+                      <p className="text-sm font-bold text-white mb-0.5">@{profile?.username || 'admin'}</p>
+                      <p className="text-[11px] text-brand uppercase tracking-wider font-mono text-[9px]">ROOT_ACCESS</p>
                     </div>
                     <button
                       onClick={() => {
@@ -143,19 +135,6 @@ export default function Navbar() {
                       Log Out
                     </button>
                   </div>
-                </div>
-              ) : (
-                <div className="pt-4 border-t border-white/10 mt-4 px-3">
-                  <button 
-                    onClick={() => {
-                      setShowLoginModal(true);
-                      setIsOpen(false);
-                    }}
-                    className="w-full py-2 bg-brand/10 hover:bg-brand/20 text-brand font-bold rounded-md border border-brand/20 transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
-                  >
-                    <User className="w-4 h-4" />
-                    Log In / Register
-                  </button>
                 </div>
               )}
             </div>

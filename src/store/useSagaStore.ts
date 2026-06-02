@@ -48,40 +48,56 @@ interface SagaState {
 
 export const useSagaStore = create<SagaState>((set) => ({
   nodes: [
-    { id: 'ru', name: 'Ryan Upchurch', type: 'creator', color: '#ff0000', heat: 0.9, val: 20 },
-    { id: 'mk', name: 'MoKoN', type: 'creator', color: '#ff4400', heat: 0.7, val: 15 },
-    { id: 'ac', name: 'Adam Calhoun', type: 'creator', color: '#ffaa00', heat: 0.5, val: 12 },
-    { id: 'jr', name: 'Jelly Roll', type: 'creator', color: '#888888', heat: 0.3, val: 10 },
-    { id: 'ls1', name: 'Midnight Rant 05/14', type: 'livestream', color: '#00aaff', heat: 1.0, val: 8 },
-    { id: 'dt1', name: 'The Pioneer Diss', type: 'diss_track', color: '#ff00ff', heat: 0.8, val: 10 },
+    { id: 'ru', name: 'Ryan Upchurch', type: 'creator', color: '#ff0000', heat: 0.95, val: 24 },
+    { id: 'mk', name: 'MoKoN', type: 'creator', color: '#ff4400', heat: 0.85, val: 18 },
+    { id: 'ac', name: 'Adam Calhoun', type: 'creator', color: '#ffaa00', heat: 0.65, val: 15 },
+    { id: 'jr', name: 'Jelly Roll', type: 'creator', color: '#888888', heat: 0.35, val: 12 },
+    { id: 'sb', name: 'Sonny Bama', type: 'creator', color: '#ff5500', heat: 0.82, val: 14 },
+    { id: 'cs', name: 'cmdshft', type: 'creator', color: '#ffff00', heat: 0.78, val: 13 },
+    { id: 'cm', name: 'Chase Matthew', type: 'creator', color: '#00ffaa', heat: 0.55, val: 11 },
+    { id: 'kr', name: 'Rodni Defamation Saga', type: 'allegation', color: '#ff00ff', heat: 0.99, val: 16 },
+    { id: 'jl', name: 'Jacob LeVeille VARA', type: 'allegation', color: '#ffffff', heat: 0.40, val: 10 },
   ],
   links: [
-    { id: 'l1', source: 'mk', target: 'ru', label: 'Original Pioneer Call-out', type: 'hostile', intensity: 0.9 },
-    { id: 'l2', source: 'ru', target: 'ac', label: 'Collaborator', type: 'allied', intensity: 0.7 },
-    { id: 'l3', source: 'ls1', target: 'ru', label: 'Primary Subject', type: 'neutral', intensity: 1.0 },
-    { id: 'l4', source: 'mk', target: 'dt1', label: 'Authored By', type: 'allied', intensity: 1.0 },
+    { id: 'l1', source: 'mk', target: 'ru', label: 'Original Pioneer Call-out', type: 'hostile', intensity: 0.95 },
+    { id: 'l2', source: 'ru', target: 'ac', label: 'Strategic Peace Accord (2024)', type: 'allied', intensity: 0.80 },
+    { id: 'l3', source: 'ru', target: 'jr', label: 'Mainstream trajectory friction', type: 'unstable', intensity: 0.50 },
+    { id: 'l4', source: 'ru', target: 'sb', label: 'Royalty & Mastercard disputes', type: 'hostile', intensity: 0.90 },
+    { id: 'l5', source: 'ru', target: 'cs', label: 'Deposition leak sanctions', type: 'hostile', intensity: 0.85 },
+    { id: 'l6', source: 'ru', target: 'cm', label: 'Label alignment warning', type: 'unstable', intensity: 0.60 },
+    { id: 'l7', source: 'ru', target: 'kr', label: 'Federal Jury Verdict $17.5M', type: 'hostile', intensity: 0.99 },
+    { id: 'l8', source: 'ru', target: 'jl', label: 'VARA painting damage lawsuit', type: 'former_allies', intensity: 0.70 },
+    { id: 'l9', source: 'sb', target: 'cs', label: 'Accused distributor collusion', type: 'allied', intensity: 0.75 },
   ],
   eras: [
     { 
       id: 'e1', 
-      title: 'THE CORE PIONEER ERA', 
-      startDate: '2021-01-01', 
-      endDate: '2021-12-31', 
-      description: 'The foundation of the modern movement. MoKoN establishes the first lines of dissent.',
-      chapters: ['Chapter I: The Callout', 'Chapter II: The Response']
+      title: 'THE CORE PIONEER ERA (2014-2020)', 
+      startDate: '2014-01-01', 
+      endDate: '2020-12-31', 
+      description: 'Dawn of Hick-Hop. Early viral RHEC comedic breakthrough leading into the Jacob LeVeille gunfire lawsuit.',
+      chapters: ['Chapter I: Upchurch the Redneck', 'Chapter II: VARA Art Fire Litigation']
     },
     {
       id: 'e2',
-      title: 'THE LIVESTREAM ESCALATION ARC',
-      startDate: '2022-01-01',
-      description: 'Emerging narrative: Shift from music to direct daily community interaction and live conflicts.',
-      chapters: ['Chapter III: Midnight Rants', 'Chapter IV: Shadow People']
+      title: 'THE LIVESTREAM ESCALATION ARC (2021-2023)',
+      startDate: '2021-01-01',
+      endDate: '2023-12-31',
+      description: 'Severe escalation of digital call-outs. MoKoN files exhaustive contradictions. Rodni stream campaign commences and sparks federal complaints.',
+      chapters: ['Chapter III: Whistleblower Epoch', 'Chapter IV: California Defamation Complaint']
+    },
+    {
+      id: 'e3',
+      title: 'THE FRAUD WAR & COURT CRISIS (2024-2026)',
+      startDate: '2024-01-01',
+      description: 'Resolution with Adam Calhoun contrasted against explosive legal battles. Sonny Bama and cmdshft MasterCard/deposition triggers culminate in a massive $17.5M federal verdict.',
+      chapters: ['Chapter V: The 2024 Peace Accord', 'Chapter VI: The $17.5M Verdict Day']
     }
   ],
   selectedNode: null,
-  dramaHeatIndex: 0.85,
+  dramaHeatIndex: 0.92,
   isAutoDocMode: false,
-  activeEraId: 'e2',
+  activeEraId: 'e3',
 
   setNodes: (nodes) => set({ nodes }),
   setLinks: (links) => set({ links }),
