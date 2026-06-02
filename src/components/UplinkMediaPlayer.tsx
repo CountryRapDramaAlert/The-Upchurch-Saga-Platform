@@ -65,6 +65,39 @@ export default function UplinkMediaPlayer() {
   ]);
 
   const playerRef = useRef<YouTubePlayer | null>(null);
+  const hasInteractedRef = useRef<boolean>(false);
+
+  // Listen for first interaction to unmute and play
+  useEffect(() => {
+    let interacted = false;
+    const handleInteraction = () => {
+      hasInteractedRef.current = true;
+      if (interacted) return;
+      if (playerRef.current) {
+        interacted = true;
+        try {
+          playerRef.current.unMute();
+          playerRef.current.playVideo();
+          addLog("INTERACTION DETECTED: DECRYPTING COMS AUDIO", "success");
+        } catch (e) {
+          console.warn("Failed to unmute on interaction:", e);
+        }
+        cleanup();
+      }
+    };
+
+    const cleanup = () => {
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+    };
+
+    window.addEventListener('click', handleInteraction);
+    window.addEventListener('touchstart', handleInteraction);
+    window.addEventListener('keydown', handleInteraction);
+
+    return cleanup;
+  }, []);
 
   function getTimestamp() {
     const d = new Date();
@@ -222,7 +255,7 @@ export default function UplinkMediaPlayer() {
                   height: '100%',
                   playerVars: {
                     autoplay: 1,
-                    mute: 0,
+                    mute: 1,
                     controls: 1,
                     modestbranding: 1,
                     rel: 0,
@@ -233,6 +266,17 @@ export default function UplinkMediaPlayer() {
                 onReady={(e: YouTubeEvent) => {
                   playerRef.current = e.target;
                   addLog(`DOCK ENGAGEMENT: LINKED YOUTUBE DECODER [${currentVideo.code}]`, 'success');
+                  try {
+                    if (hasInteractedRef.current) {
+                      e.target.unMute();
+                      addLog(`POST-INTERACTION: Broadcaster audio unmuted`, 'success');
+                    } else {
+                      e.target.mute();
+                    }
+                    e.target.playVideo();
+                  } catch (err) {
+                    console.log("Auto-start play invocation failed:", err);
+                  }
                 }}
                 onStateChange={(e: YouTubeEvent) => {
                   // State 1: Playing, 2: Paused, 0: Ended, -1: Unstarted, 3: Buffering

@@ -40,6 +40,96 @@ export const HIGH_FIDELITY_EVIDENCE_SEEDS: Omit<Evidence, 'id'>[] = [
     }
   },
   {
+    title: "Luke Combs & Confederate Flag Controversy",
+    description: "Upchurch faced severe internet backlash and sparked ongoing community drama after actively utilizing Confederate flag imagery in his music video for 'Outlaw'. When mainstream country star Luke Combs issued a public apology for his past use of the flag, Upchurch fiercely criticized Combs, labeling him a 'sellout,' and staunchly defended his own branding.",
+    type: "video",
+    submittedBy: "intel_core",
+    submitterName: "SYSTEM ARCHIVIST",
+    status: "approved",
+    votes: 49,
+    tags: ["beef", "music"],
+    createdAt: "2021-02-18T14:00:00Z",
+    aiAnalysis: {
+      summary: "Severe community backlash and fallout after Luke Combs' past flag apology. Upchurch launches defensive branding.",
+      volatility: 0.70,
+      validityScore: 0.98,
+      extractedThemes: ["Luke Combs Debate", "Confederate Flag Backlash", "Outlaw Defiance"],
+      narrativeImpact: "High"
+    }
+  },
+  {
+    title: "The Mokon Commentary and Blacklist Era",
+    description: "Upchurch faced significant pushback from underground community commentary channels, including creators like Mokon who called him out for contradictions. Upchurch routinely retaliated on his social channels, dismissing critics as 'clout-chasers' and mobilizing his 'Creek Squad' fanbase against them.",
+    type: "video",
+    submittedBy: "intel_core",
+    submitterName: "SYSTEM ARCHIVIST",
+    status: "approved",
+    votes: 62,
+    tags: ["beef", "music"],
+    createdAt: "2021-07-15T16:00:00Z",
+    aiAnalysis: {
+      summary: "Long-standing friction with commentary channels. Upchurch retaliates against Mokon with blockades and clout-chaser claims.",
+      volatility: 0.75,
+      validityScore: 0.99,
+      extractedThemes: ["Creek Squad Mobilization", "Clout-Chaser Accusations", "Archival Friction"],
+      narrativeImpact: "High"
+    }
+  },
+  {
+    title: "Reaper7man 'Fuck Creek Squad' Direct Spotify Attack",
+    description: "Underground artist REAPER7MAN escalated local community tensions by releasing an explicit, highly targeted diss track on Spotify titled 'FUCK CREEK SQUAD (Ryan Upchurch diss)'. This further fractured the country-rap community and prompted defensive social media tirades from Upchurch.",
+    type: "text",
+    submittedBy: "intel_core",
+    submitterName: "SYSTEM ARCHIVIST",
+    status: "approved",
+    votes: 41,
+    tags: ["beef", "music"],
+    createdAt: "2021-11-20T17:45:00Z",
+    aiAnalysis: {
+      summary: "Explicit Spotify diss track from Reaper7man escalating regional division amongst country rap fanbases.",
+      volatility: 0.82,
+      validityScore: 0.96,
+      extractedThemes: ["Spotify Diss War", "Fractured Coalitions", "Social Tirades"],
+      narrativeImpact: "High"
+    }
+  },
+  {
+    title: "The Johnny Gobble / GobbleStoppa Feud",
+    description: "Upchurch was embroiled in a chaotic online feud with an internet personality known as Johnny Gobble. The drama resulted in Upchurch releasing the biting diss track 'Big LiL GobbStoppa'. Despite the intense insults, Upchurch later made public offers on TikTok to personally fund Cumberland Heights rehabilitation treatment for Gobble.",
+    type: "text",
+    submittedBy: "intel_core",
+    submitterName: "SYSTEM ARCHIVIST",
+    status: "approved",
+    votes: 38,
+    tags: ["beef", "personal"],
+    createdAt: "2022-04-12T09:00:00Z",
+    aiAnalysis: {
+      summary: "Volatile clash with Johnny Gobble leading to the 'Big LiL GobbStoppa' diss and an unexpected rehab funding offer.",
+      volatility: 0.85,
+      validityScore: 0.97,
+      extractedThemes: ["Johnny Gobble Feud", "Cumberland Heights Offer", "Erratic Generosity"],
+      narrativeImpact: "Medium"
+    }
+  },
+  {
+    title: "Kiely Rodni Tragic Disappearance & Outrage Stream Campaigns",
+    description: "Following the tragic 2022 disappearance and accidental drowning of local teenager Kiely Rodni in California, Upchurch turns his focus to true-crime stream output. Over multiple viral video streams to his 3+ million followers, he alleges that the search efforts, family-led GoFundMe pages, and local investigations correspond to a fabricated 'scam' to raise money.",
+    type: "video",
+    submittedBy: "intel_core",
+    submitterName: "SYSTEM ARCHIVIST",
+    status: "approved",
+    votes: 56,
+    tags: ["livestream", "legal"],
+    createdAt: "2022-08-25T23:45:00Z",
+    aiAnalysis: {
+      summary: "Entry point to the multi-million dollar defamation timeline. Establishes core claims of search fraud.",
+      volatility: 0.95,
+      validityScore: 0.92,
+      extractedThemes: ["True Crime Conspiracies", "True Hostility Peak", "Midnight Outrage Cycles"],
+      narrativeImpact: "Extreme"
+    }
+  },
+  {
     title: "Aggressed Mainstream Feuds: Calhoun, Jelly Roll, and Chase Matthew",
     description: "Upchurch triggers aggressive public fallout videos and call-outs targeting Adam Calhoun and Jelly Roll, accusing them of fence-sitting, playing industry games, and capitulating to major label structures rather than keeping it fully independent. This is followed by a shadow fallout with Chase Matthew after Matthew achieves mainstream signing trajectories.",
     type: "text",
@@ -58,21 +148,21 @@ export const HIGH_FIDELITY_EVIDENCE_SEEDS: Omit<Evidence, 'id'>[] = [
     }
   },
   {
-    title: "Kiely Rodni Tragic Disappearance & Outrage Stream Campaigns",
-    description: "Following the disappearance and accidental drowning of local teenager Kiely Rodni in California, Upchurch turns his focus to true-crime stream output. Over multiple high-heat midnight streams, he alleges that the community's search efforts, family-led GoFundMe pages, and local law enforcement investigations correspond to structured fraud and cover-ups.",
+    title: "Adam Calhoun Reignited Rivalry & Diss Tracks",
+    description: "Upchurch reignited a long-standing, volatile rivalry with country-rapper Adam Calhoun, resulting in a series of direct diss tracks including 'DOOIN MORE RAPPIN'.",
     type: "video",
     submittedBy: "intel_core",
     submitterName: "SYSTEM ARCHIVIST",
     status: "approved",
-    votes: 56,
-    tags: ["livestream", "legal"],
-    createdAt: "2022-08-25T23:45:00Z",
+    votes: 75,
+    tags: ["beef", "music"],
+    createdAt: "2025-01-25T11:30:00Z",
     aiAnalysis: {
-      summary: "Entry point to the multi-million dollar defamation timeline. Establishes core claims of search fraud.",
-      volatility: 0.95,
-      validityScore: 0.92,
-      extractedThemes: ["True Crime Conspiracies", "True Hostility Peak", "Midnight Outrage Cycles"],
-      narrativeImpact: "Extreme"
+      summary: "A breakdown of the peace accords. Immediate return to competitive bars and direct diss tracks.",
+      volatility: 0.88,
+      validityScore: 0.97,
+      extractedThemes: ["Reignited Rivalry", "Dooin More Rappin", "Hollar Warfare"],
+      narrativeImpact: "High"
     }
   },
   {
@@ -112,26 +202,44 @@ export const HIGH_FIDELITY_EVIDENCE_SEEDS: Omit<Evidence, 'id'>[] = [
     }
   },
   {
-    title: "Sonny Bama & cmdshft deposition leak & perjury scandal",
-    description: "Upchurch releases series of high-heat video reels accusing longtime close ally Sonny Bama and music distribution service cmdshft of identity theft, credit card (Mastercard) fraud, and legal perjury regarding royalty balances. Upchurch releases sealed court depositions directly to the web, triggering federal sanction motions and fines for protective order violations.",
+    title: "Internal Business & Management Crashing Out (cmdshft & Sonny Bama Scandal)",
+    description: "In January 2026, Upchurch completely severed ties with his administrative and distribution teams in a series of explosive Instagram videos. He accused longtime distributors cmdshft and local associate Sonny Bama of perjury, fraud, and evidence tampering, publicly alleging they opened fraudulent credit cards under his name and mishandled his intellectual property.",
     type: "document",
     submittedBy: "intel_core",
     submitterName: "SYSTEM ARCHIVIST",
     status: "approved",
     votes: 68,
-    tags: ["legal", "livestream"],
-    createdAt: "2026-02-14T02:30:00Z",
+    tags: ["legal", "livestream", "beef"],
+    createdAt: "2026-01-18T02:30:00Z",
     aiAnalysis: {
-      summary: "High-intensity dispute targeting internal royalty allocations and corporate identity theft.",
+      summary: "High-intensity dispute targeting internal royalty allocations, corporate identity theft, and management fraud.",
       volatility: 0.90,
       validityScore: 0.96,
-      extractedThemes: ["Corporate Collusion", "Deposition Violations", "Mastercard Fraud Allegations"],
+      extractedThemes: ["Corporate Collusion", "Severing Administrative Ties", "Credit Card Fraud Allegations"],
+      narrativeImpact: "Extreme"
+    }
+  },
+  {
+    title: "Jelly Roll & Bunnie Xo Authenticity Feud",
+    description: "Upchurch engaged in a highly publicized feud with mainstream country-rap titan Jelly Roll and his wife Bunnie Xo, dropping the direct diss track 'Been Behind' to question Jelly Roll's industry authenticity.",
+    type: "video",
+    submittedBy: "intel_core",
+    submitterName: "SYSTEM ARCHIVIST",
+    status: "approved",
+    votes: 87,
+    tags: ["beef", "music"],
+    createdAt: "2026-03-30T10:00:00Z",
+    aiAnalysis: {
+      summary: "Mainstream clash questioning genuine roots. Dropping of 'Been Behind' targeting regional powerhouse.",
+      volatility: 0.90,
+      validityScore: 0.98,
+      extractedThemes: ["Authenticity Challenge", "Mainstream Heavyweights", "Been Behind Diss"],
       narrativeImpact: "Extreme"
     }
   },
   {
     title: "The $17.5M Federal True Crime Defamation Jury Verdict",
-    description: "A federal jury in the Middle District of Tennessee renders a historic civil verdict after a multi-day defamation trial. The jury orders Ryan Upchurch to pay $6.5 million in damages to David Robertson (Kiely Rodni's father) and $11 million to Daniel Rodni (her grandfather) for intentional infliction of emotional distress and systematic defamation. This landmark case establishes major legal boundaries for online influencer accountability.",
+    description: "A federal jury in the Middle District of Tennessee renders a historic civil verdict after a multi-day trial. Finding Upchurch liable for defamation and intentional infliction of emotional distress stemming from his Rodni comments, he is ordered to pay $6.5 million to Daniel Rodni (Kiely's father) and $11 million to David Robertson (Kiely's grandfather), totaling a massive $17.5 million judgment.",
     type: "document",
     submittedBy: "intel_core",
     submitterName: "SYSTEM ARCHIVIST",
@@ -224,12 +332,12 @@ export const HIGH_FIDELITY_EVIDENCE_SEEDS: Omit<Evidence, 'id'>[] = [
 export const HIGH_FIDELITY_LAWSUITS_SEEDS: Omit<Lawsuit, 'id'>[] = [
   {
     title: "Robertson & Rodni v. Ryan Upchurch (True Crime Defamation)",
-    description: "Federal civil case focused on defamation, intentional infliction of emotional distress, and coordinate libel actions over streams alleging fake recovery searches and fraudulent GoFundMe scams surrounding the Kiely Rodni search. The case culminated in a historic $17.5 million federal jury verdict against Upchurch on May 19, 2026.",
+    description: "Federal civil case focused on defamation, intentional infliction of emotional distress, and coordinated libel actions over streaming commentary alleging the Kiely Rodni search was fabricated and a fundraising scam. Culminated in a historic $17.5 million federal jury verdict against Upchurch on May 19, 2026 ($6.5 million awarded to Daniel Rodni and $11 million awarded to David Robertson).",
     caseNumber: "3:23-CV-00770",
     status: "Completed (Judgment Entered)",
     participants: ["Ryan Upchurch", "David Robertson", "Daniel Rodni", "Middle District of TN Federal Court"],
     filings: [
-      { date: "2026-05-19", title: "Federal Jury Verdict: $17,500,000 Total Damages Awarded" },
+      { date: "2026-05-19", title: "Federal Jury Verdict: $17,500,000 Awarded ($11M to Robertson, $6.5M to Rodni)" },
       { date: "2026-05-12", title: "Pre-Trial Deposition Contempt Motion Over Deletions" },
       { date: "2024-05-23", title: "Order Overruling Motion to Dismiss, Defamation Allowed To Proceed" }
     ]
@@ -266,10 +374,12 @@ export const HIGH_FIDELITY_DOSSIER_SEEDS: DossierProfile[] = [
     alias: ["Upchurch the Redneck", "RHEC Outlaw"],
     role: "subject",
     reportedActivities: [
-      "Pioneered the Hick-Hop country rap genre segment",
-      "Conducted extensive midnight online true-crime narrative streaming campaigns",
-      "Authored viral video and auditory diss tracks targeting multiple industry actors",
-      "Currently facing major federal financial liabilities following a landmark defamation verdict"
+      "Pioneered the Hick-Hop country-rap genre segment starting in 2015",
+      "Conducted extensive midnight online true-crime streaming campaigns regarding Kiely Rodni's disappearance, resulting in a devastating $17.5M federal defamation verdict ($6.5M to Daniel Rodni, $11M to David Robertson) in May 2026",
+      "Fiercely criticized mainstream artist Luke Combs for apologizing over past Confederate flag use during the 2021 Outlaw movement",
+      "Authored viral diss track 'Been Behind' targeting Jelly Roll & Bunnie Xo (2026), and 'DOOIN MORE RAPPIN' targeting rival Adam Calhoun (2025)",
+      "Released scathing diss 'Big LiL GobbStoppa' in the Johnny Gobble feud (2022), later offering to fund Cumberland Heights rehab for Gobble",
+      "Severed ties with distribution service cmdshft and Sonny Bama in January 2026, accusing them of credit card fraud, plagiarism, and perjury"
     ],
     affiliations: ["Creek Squad", "Holler Hood Records", "RHEC"],
     status: "monitored",

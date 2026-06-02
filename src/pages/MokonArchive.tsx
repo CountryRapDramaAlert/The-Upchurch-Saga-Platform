@@ -85,13 +85,13 @@ const MOKON_PLAYLIST = [
     id: 'j2vouvpa9PI', 
     title: 'Behind the Scenes: cmdshft & Sonny Bama Royalty Conflict', 
     type: 'Expose',
-    description: 'A crucial visual breakdown tracing the leaked deposition files and perjury scandals. Details the allegations of credit card fraud, Mastercard account maneuvers, and unauthorized transfer claims.'
+    description: 'A crucial visual breakdown tracing the leaked deposition files, perjury scandals, and the January 2026 split where Upchurch severed ties with cmdshft and Sonny Bama over allegations of corporate identity credit card fraud.'
   },
   { 
     id: 'y9ZThcahQCA', 
     title: 'Historic Verdict: Inside the $17.5M Defamation Judgment', 
     type: 'Legal & Court',
-    description: 'Comprehensive legal and community commentary documenting the milestone civil jury decision in the Middle District of Tennessee, outlining how internet actors are legally held accountable for defamation and severe emotional distress.'
+    description: 'Comprehensive legal and community commentary documenting the milestone $17.5 million civil jury decision in the Middle District of Tennessee, including $6.5 million awarded to father Daniel Rodni and $11 million to grandfather David Robertson.'
   },
   { 
     id: 'VAkHWmEhUr0', 

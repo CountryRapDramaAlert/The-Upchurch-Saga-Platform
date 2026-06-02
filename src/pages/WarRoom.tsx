@@ -39,7 +39,7 @@ interface Connection {
 const DEFAULT_MAP_NODES = [
   { id: 'ru', name: 'Ryan Upchurch', type: 'creator', x: 250, y: 180, description: 'Central figure of the saga, owner of Hollar Hood/Creek squad.', heat: 0.95 },
   { id: 'mk', name: 'MoKoN', type: 'creator', x: 550, y: 220, description: 'NODE: MK\n\nMOKON\n\nORIGINAL WHISTLEBLOWER AND OG UPCHURCH CRITIC WHO BEGAN CALLING OUT CONTRADICTIONS, BEHAVIOR PATTERNS, AND INDUSTRY MANIPULATION YEARS BEFORE IT BECAME MAINSTREAM INSIDE THE COMMUNITY.\n\nENDURED YEARS OF HARASSMENT, MOCKERY, BLACKLISTING, AND TARGETED HATE CAMPAIGNS FROM MEMBERS OF THE SAME COMMUNITY WHO ARE NOW PUBLICLY QUESTIONING MANY OF THE SAME NARRATIVES HE WARNED ABOUT EARLY ON — WITHOUT EVER ACKNOWLEDGING HIS ROLE OR ISSUING AN APOLOGY.\n\nINDEPENDENT MUSICIAN, AUDIO ENGINEER, SONGWRITER, AND CONTENT CREATOR WITH OVER TWO DECADES OF ORIGINAL MUSIC PRODUCTION AND UNDERGROUND CULTURAL INVOLVEMENT.\n\nKNOWN FOR MERGING INVESTIGATIVE ARCHIVING, DISS TRACK ANALYSIS, LIVE STREAM DOCUMENTATION, AND DIGITAL EVIDENCE PRESERVATION INTO A SINGLE LONG-FORM DOCUMENTARY STYLE ECOSYSTEM.', heat: 0.82 },
-  { id: 'ac', name: 'Adam Calhoun', type: 'creator', x: 380, y: 100, description: 'Collaborator and frequent middleman in the southern rap circle.', heat: 0.61 },
+  { id: 'ac', name: 'Adam Calhoun', type: 'creator', x: 380, y: 100, description: 'Collaborator and rival in the southern rap circle. Their 2024 stage reconciliation shattered in early 2025, starting direct diss track battles.', heat: 0.81 },
   { id: 'dt1', name: 'Street Anthem / Diss', type: 'diss_track', x: 500, y: 340, description: 'High-energy musical response focusing on authenticity claims.', heat: 0.77 },
   { id: 'ls1', name: 'Live Stream Midnight', type: 'livestream', x: 200, y: 320, description: 'A highly explosive stream making direct statements about agreements.', heat: 1.0 },
   { id: 'dh', name: 'Dagburn Johnny', type: 'creator', x: 680, y: 150, description: 'NODE: DH\n\nDAGBURN JOHNNY\n\nCONTROVERSIAL COMMUNITY PERSONALITY FREQUENTLY ASSOCIATED WITH DIVISIVE CONFLICTS, BACKCHANNEL DRAMA, AND INTERPERSONAL MANIPULATION INSIDE THE EXTENDED COUNTRY RAP ECOSYSTEM.\n\nKNOWN FOR INSERTING HIMSELF INTO HIGH-TENSION SITUATIONS, SHIFTING NARRATIVES BETWEEN GROUPS, AND OPERATING IN WAYS MANY COMMUNITY MEMBERS HAVE DESCRIBED AS SELF-SERVING, UNRELIABLE, OR CALCULATED.\n\nRECURRING FIGURE IN MULTIPLE COMMUNITY FALL-OUTS, PRIVATE DISPUTES, AND INFORMATION CHAINS WHERE TRUST, LOYALTY, AND MOTIVE HAVE OFTEN BEEN QUESTIONED.', heat: 0.45 },
@@ -47,7 +47,7 @@ const DEFAULT_MAP_NODES = [
 
 const DEFAULT_MAP_CONNECTIONS: Connection[] = [
   { id: 'c1', from: 'ru', to: 'mk', relationship: 'hostile', description: 'Major musical and public conflict' },
-  { id: 'c2', from: 'ru', to: 'ac', relationship: 'allied', description: 'Long-term friends and strategic allies' },
+  { id: 'c2', from: 'ru', to: 'ac', relationship: 'unstable', description: 'Collaborative history shattered by 2025 direct diss battles' },
   { id: 'c3', from: 'mk', to: 'dt1', relationship: 'allied', description: 'Track production & lyrical delivery' },
   { id: 'c4', from: 'ls1', to: 'ru', relationship: 'neutral', description: 'Stream broadcasted by owner' },
   { id: 'c5', from: 'dh', to: 'mk', relationship: 'allied', description: 'Shared intelligence on the Holler environment' },

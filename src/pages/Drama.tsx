@@ -26,18 +26,18 @@ const conflicts: DramaConflict[] = [
     id: 'rodni-lawsuit',
     name: 'Kiely Rodni Lawsuit',
     tag: 'LEGAL BATTLE',
-    status: 'Ongoing',
+    status: 'Settled',
     era: '2022–2026',
     image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=2670&auto=format&fit=crop',
-    description: 'A comprehensive tracking of the defamation and libel lawsuit following the disappearance of Kiely Rodni. Documents the Denied Motion to Dismiss in federal court and subsequent legal maneuvers.',
-    participants: ['Ryan Upchurch', 'Legal Teams', 'Adversarial Parties'],
+    description: 'A comprehensive tracking of the defamation and libel lawsuit following the disappearance of Kiely Rodni. Stemming from comments claiming the tragical event was a fabricated GoFundMe fundraising scam, a federal jury in Tennessee found Upchurch liable for defamation and intentional infliction of emotional distress in May 2026, ordering a historic $17.5 million judgment ($6.5 million to father Daniel Rodni, and $11 million to grandfather David Robertson).',
+    participants: ['Ryan Upchurch', 'Daniel Rodni', 'David Robertson'],
     evidenceLevel: 'Critical',
     timeline: [
-      { date: '2022', event: 'Kiely Rodni Disappearance & Viral Streams' },
-      { date: '2023', event: 'Initial Defamation Lawsuit Filed' },
-      { date: '2024', event: 'Injunctions and Discovery Phase' },
-      { date: '2025', event: 'Motion to Dismiss Denied in Federal Court' },
-      { date: '2026', event: 'Active Court Preparation & Updates' }
+      { date: '2022', event: 'Kiely Rodni Disappearance & speculatory stream commentary' },
+      { date: '2023', event: 'Daniel Rodni & David Robertson file federal defamation case' },
+      { date: '2024', event: 'Discovery phase, deposition orders, and protective motions' },
+      { date: '2025', event: 'Federal judge overrules motion to dismiss the lawsuit' },
+      { date: 'May 2026', event: 'Federal Middle District TN jury returns massive $17.5 million verdict' }
     ]
   },
   {
@@ -47,15 +47,15 @@ const conflicts: DramaConflict[] = [
     status: 'Cold',
     era: '2024–2025',
     image: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2670&auto=format&fit=crop',
-    description: 'The breakdown of the Upchurch/Calhoun alliance. Features the 2025 rap battle including Adam Calhoun\'s "Tweaker" and "Church\'s Coffin", and Upchurch\'s response tracks.',
+    description: 'The breakdown of the Upchurch/Calhoun alliance. In early 2025, Upchurch reignited his long-standing, volatile rivalry with country-rapper Adam Calhoun, resulting in a series of direct diss tracks including "DOOIN MORE RAPPIN".',
     participants: ['Ryan Upchurch', 'Adam Calhoun'],
     evidenceLevel: 'High',
     timeline: [
       { date: 'Jan 2025', event: 'Calhoun releases "Tweaker" (Subliminal)' },
       { date: 'Jan 2025', event: 'Calhoun releases "Church\'s Coffin" (Direct Diss)' },
-      { date: 'Jan 2025', event: 'Upchurch fires back with "The Roast of Ryan Upchurch" & "Dooin More Rappin"' },
-      { date: 'Feb 2025', event: 'Calhoun ends the rap battle' },
-      { date: 'Feb 2025', event: 'Justin Time states the feud was "Pro Wrestling"' }
+      { date: 'Jan 2025', event: 'Upchurch fires back with direct diss tracks including "DOOIN MORE RAPPIN"' },
+      { date: 'Feb 2025', event: 'Calhoun ends the active rap battle' },
+      { date: 'Feb 2025', event: 'Justin Time states the feud was reminiscent of "Pro Wrestling"' }
     ]
   },
   {
@@ -86,25 +86,37 @@ const conflicts: DramaConflict[] = [
   },
   {
     id: 'outlaw-backlash',
-    name: 'Outlaw Culture Debate',
+    name: 'Luke Combs Flag Controversy',
     tag: 'CULTURE DEBATE',
     status: 'Settled',
     era: '2021',
     image: 'https://images.unsplash.com/photo-1493225255756-d9584f8606e9?q=80&w=2670&auto=format&fit=crop',
-    description: 'Public discourse following criticisms of mainstream country artists. Focuses on authenticity debates and the "Can I Get An Outlaw" movement in country rap.',
+    description: 'Upchurch faced severe internet backlash and sparked ongoing community drama after actively utilizing Confederate flag imagery in his music video for "Outlaw". Country star Luke Combs issued a public apology for past use of the flag. Upchurch fiercely criticized Combs, labeling him a "sellout," and staunchly defended his own branding.',
     participants: ['Ryan Upchurch', 'Luke Combs', 'Mainstream Media'],
-    evidenceLevel: 'Medium'
+    evidenceLevel: 'Medium',
+    timeline: [
+      { date: 'Feb 2021', event: 'Luke Combs issues public apology for past Confederate flag use' },
+      { date: 'Feb 2021', event: 'Upchurch criticizes Luke Combs, branding him a "sellout"' },
+      { date: 'Feb 2021', event: 'Upchurch releases "Outlaw" music video featuring Confederate imagery' }
+    ]
   },
   {
     id: 'peer-fallout',
-    name: 'Inner Circle Dissolution',
+    name: 'Online Beefs & Diss Tracks',
     tag: 'PUBLIC FEUDS',
-    status: 'Ongoing',
-    era: '2024–2025',
+    status: 'Viral',
+    era: '2019–2026',
     image: 'https://images.unsplash.com/photo-1459749411177-042180ce673c?q=80&w=2670&auto=format&fit=crop',
-    description: 'Tracking the dissolution of relationships with long-term collaborators including Jelly Roll and former members of the "Church Gang" circle.',
-    participants: ['Ryan Upchurch', 'Jelly Roll', 'Church Gang Members'],
-    evidenceLevel: 'High'
+    description: 'Ongoing online feuds, social roasts, and diss tracks with creators, commentators, and mainstream figures. Explores the 2021-2024 Mokon Commentary dispute, Johnny Gobble GobbStoppa feud, REAPER7MAN Spotify diss, and the 2026 fallout with Jelly Roll and Bunnie Xo.',
+    participants: ['Ryan Upchurch', 'Mokon', 'Johnny Gobble', 'REAPER7MAN', 'Jelly Roll', 'Bunnie Xo'],
+    evidenceLevel: 'High',
+    timeline: [
+      { date: '2021', event: 'Mokon faces social media retaliation for calling out Upchurch contradictions' },
+      { date: '2021', event: 'Underground artist REAPER7MAN releases "FUCK CREEK SQUAD" diss on Spotify' },
+      { date: '2022', event: 'Johnny Gobble feud sparks; Upchurch drops "Big LiL GobbStoppa" track' },
+      { date: '2023', event: 'Upchurch TikTok offer to fund Cumberland Heights rehab for Johnny Gobble' },
+      { date: '2026', event: 'Upchurch drops "Been Behind" diss track targeting Jelly Roll & Bunnie Xo' }
+    ]
   },
   {
     id: 'retirement-claims',
@@ -119,14 +131,19 @@ const conflicts: DramaConflict[] = [
   },
   {
     id: 'management-disputes',
-    name: 'Management & Financial Allegations',
+    name: 'Internal Business & Management Split',
     tag: 'FRAUD ALLEGATIONS',
     status: 'Ongoing',
     era: '2026',
     image: 'https://images.unsplash.com/photo-1554224155-16974a4ea2c5?q=80&w=2670&auto=format&fit=crop',
-    description: 'Disputes with former management and associates, including allegations of financial mismanagement and breach of contract. Central to the 2026 archive updates.',
-    participants: ['Ryan Upchurch', 'Former Management', 'Archivists'],
-    evidenceLevel: 'Critical'
+    description: 'In January 2026, Upchurch completely severed ties with his administrative and distribution teams in a series of explosive Instagram videos. He accused distributors cmdshft and Sonny Bama of perjury, fraud, and evidence tampering, alleging they opened fraudulent credit cards under his name and mishandled his intellectual property.',
+    participants: ['Ryan Upchurch', 'cmdshft distribution', 'Sonny Bama'],
+    evidenceLevel: 'Critical',
+    timeline: [
+      { date: 'Jan 2026', event: 'Shattered ties with cmdshft and Sonny Bama via intense Instagram reels' },
+      { date: 'Feb 2026', event: 'Federal copyright royalty case depositions leaked online' },
+      { date: 'Mar 2026', event: 'Distributor cmdshft files emergency motion for federal sanctions' }
+    ]
   }
 ];
 

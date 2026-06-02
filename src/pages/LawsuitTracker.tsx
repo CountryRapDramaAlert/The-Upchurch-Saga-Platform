@@ -17,11 +17,11 @@ export default function LawsuitTracker() {
       id: 'ru-rodni-2023',
       title: 'Robertson & Rodni v. Ryan Upchurch (Kiely Rodni Case)',
       caseNumber: '3:23-CV-00770',
-      description: 'Defamation and intentional infliction of emotional distress federal complaint filed in Middle District of TN regarding streams accusing family members of recovering search hoax fraud and scamming GoFundMe pages. Underwent a landmark civil jury trial resulting in a historic $17.5 million damages award against Ryan Upchurch on May 19, 2026.',
+      description: 'Federal civil complaint for defamation and intentional infliction of emotional distress filed in the Middle District of Tennessee, concerning streams claiming Kiely Rodni\'s tragic disappearance was a fabricated scam to raise money via GoFundMe. Culminated in a landmark $17.5 million federal jury verdict against Upchurch in May 2026, ordering him to pay $6.5 million to Daniel Rodni (her father) and $11 million to David Robertson (her grandfather), heavily impacting his estimated net worth.',
       status: 'Completed (Judgment Entered)',
       participants: ['Ryan Upchurch', 'David Robertson', 'Daniel Rodni', 'Federal Court System'],
       filings: [
-        { date: '2026-05-19', title: 'Federal Jury Verdict: $17.5 Million Awarded to Plaintiffs' },
+        { date: '2026-05-19', title: 'Federal Jury Verdict: $17.5M Awarded ($11M to Robertson, $6.5M to Rodni)' },
         { date: '2026-05-12', title: 'Pre-Trial Deposition Contempt Filings Entered' },
         { date: '2024-05-23', title: 'Order Overruling Motion to Dismiss, Defamation Allowed' }
       ]
@@ -43,7 +43,7 @@ export default function LawsuitTracker() {
       id: 'ru-cmdshft-2025',
       title: 'Upchurch v. cmdshft Distribution & Sonny Bama',
       caseNumber: '1:25-CV-01104',
-      description: 'Corporate and trademark distribution fallout alleging identity theft, false trademark registration transfers, and Mastercard credit card royalty account fraud. Notable for ongoing friction surrounding leaked deposition transcripts.',
+      description: 'In January 2026, Upchurch completely severed ties with his administrative and distribution teams (cmdshft and Sonny Bama) in a series of explosive videos. He accused them of perjury, fraud, and evidence tampering, publicly alleging they opened fraudulent credit cards under his name and mishandled his intellectual property.',
       status: 'Active (Depositions)',
       participants: ['Ryan Upchurch', 'Sonny Bama', 'cmdshft Distribution Systems'],
       filings: [
