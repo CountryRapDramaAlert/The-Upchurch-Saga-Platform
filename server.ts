@@ -44,14 +44,14 @@ app.get("/api/health", (req, res) => {
 app.post("/api/auth/verify-passcode", (req, res) => {
   try {
     const { email, password } = req.body;
-    const adminEmail = "didhesaythatreally@gmail.com";
+    const adminEmails = ["didhesaythatreally@gmail.com", "administrator@gmail.com"];
 
     if (!email || !password) {
       return res.status(400).json({ success: false, error: "Email and password are required credentials." });
     }
 
     const cleanEmail = email.trim().toLowerCase();
-    if (cleanEmail !== adminEmail) {
+    if (!adminEmails.includes(cleanEmail)) {
       return res.status(403).json({ success: false, error: "ACCESS_DENIED: Unauthorized administrative email address." });
     }
 
@@ -67,7 +67,7 @@ app.post("/api/auth/verify-passcode", (req, res) => {
         profile: {
           uid: "admin_bypass_uid",
           username: "administrator",
-          email: adminEmail,
+          email: cleanEmail,
           karma: 9999,
           isAdmin: true,
           createdAt: new Date().toISOString()

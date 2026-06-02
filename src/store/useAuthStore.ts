@@ -29,7 +29,7 @@ interface AuthState {
   loginAsSimulatedAdmin: () => void;
 }
 
-const ADMIN_EMAIL_WHITELIST = ['didhesaythatreally@gmail.com'];
+const ADMIN_EMAIL_WHITELIST = ['didhesaythatreally@gmail.com', 'administrator@gmail.com'];
 
 export const useAuthStore = create<AuthState>((set, get) => {
   let unsubscribeProfile: (() => void) | null = null;
