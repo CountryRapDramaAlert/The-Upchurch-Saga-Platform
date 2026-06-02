@@ -69,31 +69,55 @@ export default function Dossier() {
   };
 
   const handleSubmitProfile = async () => {
-    if (!user) return;
+    const trimmedName = newProfile.name.trim();
+    const trimmedActivity = newProfile.activityInput.trim();
+    const trimmedNotes = newProfile.notes.trim();
+
+    if (!trimmedName) {
+      const errMsg = "VALIDATION_FAILED: Channel name / node identifier cannot be empty.";
+      console.error(errMsg);
+      alert(errMsg);
+      return;
+    }
+    if (!trimmedActivity) {
+      const errMsg = "VALIDATION_FAILED: Reported activities / traits cannot be empty.";
+      console.error(errMsg);
+      alert(errMsg);
+      return;
+    }
+
     try {
       const item = {
-        name: newProfile.name,
+        name: trimmedName,
         role: newProfile.role,
-        reportedActivities: [...newProfile.activities, newProfile.activityInput].filter(Boolean),
-        affiliations: [...newProfile.affiliations, newProfile.affiliationsInput].filter(Boolean),
-        notes: newProfile.notes,
+        reportedActivities: [...newProfile.activities, trimmedActivity].filter(Boolean),
+        affiliations: [...newProfile.affiliations, newProfile.affiliationsInput.trim()].filter(Boolean),
+        notes: trimmedNotes,
         status: 'pending',
         levelOfImpact: 0.1, // Initial impact for new submissions
-        submittedBy: user.uid,
+        submittedBy: user?.uid || 'anonymous_guest',
         createdAt: new Date().toISOString()
       };
 
+      console.log("INITIALIZING_SUBMISSION_SEQUENCE with payload:", item);
+
       // Store in offline fallback
       addLocalFallbackItem('dossier', item);
+      console.log("SUBMISSION_PERSISTED_IN_LOCAL_FALLBACK_CACHE");
 
       // Attempt cloud storage
-      try {
-        await Promise.race([
-          addDoc(collection(db, 'dossier'), item),
-          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
-        ]);
-      } catch (cloudErr) {
-        console.warn("Offline submission preserved locally:", cloudErr);
+      if (user) {
+        try {
+          await Promise.race([
+            addDoc(collection(db, 'dossier'), item),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+          ]);
+          console.log("CLOUDSYNC_COMPLETED: Dossier node registered successfully in Firestore.");
+        } catch (cloudErr) {
+          console.error("CLOUDSYNC_TIMEOUT_OR_FAILURE: Submission preserved locally only:", cloudErr);
+        }
+      } else {
+        console.warn("INTEGRITY_WARNING: Submission stored locally. Authenticated Cloud user required for remote server synchronization.");
       }
 
       setSubmitSuccess(true);
@@ -103,9 +127,9 @@ export default function Dossier() {
         setNewProfile({ name: '', role: 'moderator', activityInput: '', activities: [], affiliationsInput: '', affiliations: [], notes: '' });
         fetchProfiles();
       }, 2000);
-    } catch (err) {
-      console.error("Submission failed:", err);
-      alert("Submission failed. Ensure you are signed in and all fields are valid.");
+    } catch (err: any) {
+      console.error("SUBMISSION_SEQUENCE_CRITICAL_FAILURE:", err);
+      alert(`SUBMISSION_FAILED: ${err?.message || 'Unknown protocol failure.'}`);
     }
   };
 
@@ -492,9 +516,9 @@ export default function Dossier() {
                     </div>
 
                     <button 
+                      type="button"
                       onClick={handleSubmitProfile}
-                      disabled={!newProfile.name || !newProfile.activityInput}
-                      className="w-full btn-primary py-5 text-[11px] font-black flex items-center justify-center gap-3 disabled:opacity-30 disabled:cursor-not-allowed group"
+                      className="w-full btn-primary py-5 text-[11px] font-black flex items-center justify-center gap-3 hover:bg-brand/20 hover:border-brand/50 active:scale-[0.98] transition-all group duration-150"
                     >
                       <Send size={16} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /> 
                       UPLOAD_INTEL_TO_DATABASE
