@@ -15,6 +15,7 @@ const navItems = [
   { name: 'TIMELINE', path: '/timeline', icon: History, label: 'TEMPORAL_ARCHIVE' },
   { name: 'DRAMA', path: '/drama', icon: Activity, label: 'CONFLICT_SIGNAL' },
   { name: 'MAP', path: '/map', icon: Map, label: 'COGNITIVE_WALL' },
+  { name: 'INVESTIGATION', path: '/investigation', icon: Fingerprint, label: 'EVIDENCE_LOCK' },
   { name: 'WAR ROOM', path: '/war-room', icon: ShieldAlert, label: 'STRATEGIC_INTEL' },
   { name: 'LIVE SYNC', path: '/livestream', icon: Tv, label: 'LIVE_SPEECH_SYNC' },
   { name: 'VAULT', path: '/vault', icon: Archive, label: 'MEDIA_STORAGE' },
@@ -197,7 +198,7 @@ export default function CinematicShell({ children }: { children: React.ReactNode
 
         <div className="hidden lg:flex items-center gap-12 font-mono">
           <div className="flex gap-6">
-             {navItems.slice(0, 6).map(item => (
+             {navItems.slice(0, 7).map(item => (
                 <Link 
                   key={item.path} 
                   to={item.path}

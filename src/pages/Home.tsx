@@ -125,6 +125,10 @@ export default function Home() {
                 <div className="absolute inset-0 border border-white/20 -m-1 opacity-0 group-hover:opacity-100 transition-opacity" />
                 DIVE_INTO_SAGA
               </Link>
+              <Link to="/investigation" className="group relative px-10 py-5 bg-orange-600 text-white font-black tracking-widest uppercase italic text-xs hover:bg-orange-700 transition-all shadow-[0_0_25px_rgba(239,68,68,0.25)]">
+                <div className="absolute inset-0 border border-white/20 -m-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                INVESTIGATION_BOARD
+              </Link>
               <Link to="/war-room" className="group relative px-10 py-5 bg-zinc-900 border border-white/10 text-white font-black tracking-widest uppercase italic text-xs hover:bg-zinc-800 transition-all">
                 WAR_ROOM_ACCESS
               </Link>
@@ -142,9 +146,10 @@ export default function Home() {
         </div>
 
         {/* Global Nav Grid (Bottom) */}
-        <div className="relative z-20 grid grid-cols-2 md:grid-cols-4 border-t border-white/5 bg-black/40 backdrop-blur-md">
+        <div className="relative z-20 grid grid-cols-2 lg:grid-cols-6 border-t border-white/5 bg-black/40 backdrop-blur-md">
            {[
              { name: 'Saga Timeline', path: '/timeline', icon: History, desc: 'Temporal archive of all major events.' },
+             { name: 'Investigation Board', path: '/investigation', icon: ShieldAlert, desc: 'Advanced interactive intelligence graph.' },
              { name: 'Relationship Map', path: '/map', icon: Map, desc: 'Interactive social connection graph.' },
              { name: 'Archive Vault', path: '/vault', icon: Archive, desc: 'Evidence, clips, and historical data.' },
              { name: 'Community Dossier', path: '/dossier', icon: Users, desc: 'Profile database of admins and subjects.' },
