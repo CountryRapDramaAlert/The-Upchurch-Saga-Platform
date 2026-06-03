@@ -29,6 +29,25 @@ service cloud.firestore {
 
     // --- Entity Validation Blueprints ---
 
+    function isValidArtist(data) {
+      return data.keys().hasAll(['name', 'email', 'bio', 'genres', 'status']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 200 &&
+             data.bio is string && data.bio.size() <= 10000 &&
+             data.genres is list && data.genres.size() > 0 && data.genres.size() <= 10 &&
+             data.genres[0] is string &&
+             data.status in ['pending', 'approved', 'rejected', 'changes_requested'];
+    }
+
+    function isValidArtistUpdate(data) {
+      return data.keys().hasAll(['artistId', 'artistName', 'type', 'description', 'createdAt']) &&
+             data.artistId is string && data.artistId.size() <= 128 &&
+             data.artistName is string && data.artistName.size() <= 200 &&
+             data.type in ['profile_created', 'profile_updated', 'music_added'] &&
+             data.description is string && data.description.size() <= 1000 &&
+             data.createdAt is string;
+    }
+
     function isValidCreator(data) {
       return data.keys().hasAll(['name', 'role']) &&
              data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
@@ -188,6 +207,24 @@ service cloud.firestore {
       allow read: if true;
       allow create: if isValidId(profileId) && isVerifiedUser() && isNotBanned() && isValidDossierProfile(incoming()) && incoming().status == 'pending' && incoming().submittedBy == request.auth.uid;
       allow update, delete: if isValidId(profileId) && isAdmin();
+    }
+
+    match /artists/{artistId} {
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      allow create: if isValidId(artistId) && isValidArtist(incoming()) && incoming().status == 'pending';
+      allow update: if isValidId(artistId) && (
+        isAdmin() || 
+        // Allow visitors to increment metrics
+        (incoming().status == existing().status && incoming().diff(existing()).affectedKeys().hasOnly(['metrics', 'updatedAt'])) ||
+        // Allow the submitter to update their profile if they are requesting changes
+        (incoming().status == 'pending' && existing().status == 'changes_requested' && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'email', 'bio', 'shortBio', 'genres', 'profilePicture', 'bannerImage', 'location', 'links', 'featuredSong', 'featuredAlbum', 'featuredVideo', 'status', 'updatedAt']))
+      );
+      allow delete: if isValidId(artistId) && isAdmin();
+    }
+
+    match /artist_updates/{updateId} {
+      allow read: if true;
+      allow create, update, delete: if isValidId(updateId) && isAdmin() && isValidArtistUpdate(incoming());
     }
 
     // Admin lookup collection (locked down)

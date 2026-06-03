@@ -20,6 +20,7 @@ import Dossier from './pages/Dossier';
 import AdminConsole from './pages/AdminConsole';
 import LiveStreamSync from './pages/LiveStreamSync';
 import Investigation from './pages/Investigation';
+import Artists from './pages/Artists';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/timeline" element={<Timeline />} />
+          <Route path="/artists" element={<Artists />} />
           <Route path="/drama" element={<Drama />} />
           <Route path="/lawsuits" element={<LawsuitTracker />} />
           <Route path="/vault" element={<MediaVault />} />

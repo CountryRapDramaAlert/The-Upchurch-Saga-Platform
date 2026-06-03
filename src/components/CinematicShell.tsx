@@ -13,6 +13,7 @@ import { useAuthStore } from '../store/useAuthStore';
 const navItems = [
   { name: 'HOME', path: '/', icon: Home, label: 'CORE_INTERFACE' },
   { name: 'TIMELINE', path: '/timeline', icon: History, label: 'TEMPORAL_ARCHIVE' },
+  { name: 'ARTISTS', path: '/artists', icon: Users, label: 'INDEPENDENT_SHOWCASE' },
   { name: 'DRAMA', path: '/drama', icon: Activity, label: 'CONFLICT_SIGNAL' },
   { name: 'MAP', path: '/map', icon: Map, label: 'COGNITIVE_WALL' },
   { name: 'INVESTIGATION', path: '/investigation', icon: Fingerprint, label: 'EVIDENCE_LOCK' },

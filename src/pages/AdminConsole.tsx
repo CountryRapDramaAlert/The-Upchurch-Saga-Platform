@@ -4,17 +4,17 @@ import {
   Users, Shield, AlertTriangle, CheckCircle2, XCircle, 
   Trash2, ShieldAlert, Activity, Search, Filter,
   FileText, MessageSquare, ExternalLink, RefreshCw,
-  Ban, UserMinus, UserCheck, Inbox
+  Ban, UserMinus, UserCheck, Inbox, Award, Music, Mail, MapPin
 } from 'lucide-react';
 import { collection, query, getDocs, doc, updateDoc, deleteDoc, orderBy, limit, where } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import { useAuthStore } from '../store/useAuthStore';
 import { Navigate } from 'react-router-dom';
-import { UserProfile, Report, Evidence, DossierProfile } from '../types';
+import { UserProfile, Report, Evidence, DossierProfile, Artist } from '../types';
 import { seedFirestore } from '../utils/seeder';
-import { getInitialLocalData, updateLocalFallbackItem, deleteLocalFallbackItem } from '../hooks/useFirestore';
+import { getInitialLocalData, updateLocalFallbackItem, deleteLocalFallbackItem, addLocalFallbackItem } from '../hooks/useFirestore';
 
-type AdminTab = 'submissions' | 'reports' | 'users' | 'dossier';
+type AdminTab = 'submissions' | 'reports' | 'users' | 'dossier' | 'artists';
 
 export default function AdminConsole() {
   const { profile, loading: authLoading } = useAuthStore();
@@ -26,7 +26,10 @@ export default function AdminConsole() {
   const [reports, setReports] = useState<Report[]>([]);
   const [submissions, setSubmissions] = useState<Evidence[]>([]);
   const [dossierPending, setDossierPending] = useState<DossierProfile[]>([]);
+  const [artists, setArtists] = useState<Artist[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [changesNotes, setChangesNotes] = useState<Record<string, string>>({});
+  const [announcementTexts, setAnnouncementTexts] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (profile?.isAdmin) {
@@ -83,6 +86,22 @@ export default function AdminConsole() {
           }
         }
         setDossierPending(merged);
+      } else if (activeTab === 'artists') {
+        const q = query(collection(db, 'artists'));
+        const snap = await Promise.race([
+          getDocs(q),
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500))
+        ]);
+        const serverDocs = snap.docs.map(d => ({ ...d.data(), id: d.id } as Artist));
+        const localArtists = getInitialLocalData('artists');
+        
+        const merged = [...serverDocs];
+        for (const local of localArtists) {
+          if (!merged.some(m => m.id === local.id || (m.name && m.name.toLowerCase() === local.name.toLowerCase()))) {
+            merged.push(local);
+          }
+        }
+        setArtists(merged);
       }
     } catch (err) {
       console.warn("Admin data fetch failed from Firestore, loading local backups:", err);
@@ -98,6 +117,9 @@ export default function AdminConsole() {
       } else if (activeTab === 'dossier') {
         const localDossier = getInitialLocalData('dossier');
         setDossierPending(localDossier.filter((d: any) => d.status === 'pending'));
+      } else if (activeTab === 'artists') {
+        const localArtists = getInitialLocalData('artists');
+        setArtists(localArtists);
       }
     } finally {
       setLoading(false);
@@ -166,6 +188,126 @@ export default function AdminConsole() {
     }
   };
 
+  const handleApproveArtist = async (id: string, verificationLevel: 'verified' | 'community') => {
+    const artist = artists.find(a => a.id === id);
+    if (!artist) return;
+    
+    const updates = { 
+      status: 'approved' as const, 
+      verificationStatus: verificationLevel,
+      updatedAt: new Date().toISOString()
+    };
+    
+    updateLocalFallbackItem('artists', id, updates);
+    setArtists(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+
+    try {
+      await updateDoc(doc(db, 'artists', id), updates);
+      
+      const updateId = `act-${id}-${Date.now()}`;
+      const activityData = {
+        artistId: id,
+        artistName: artist.name,
+        type: 'profile_created' as const,
+        description: `${artist.name} has officially joined Country Rap Chaos as a ${verificationLevel === 'verified' ? 'Verified Artist' : 'Community Resident'}!`,
+        createdAt: new Date().toISOString()
+      };
+      
+      addLocalFallbackItem('artist_updates', activityData);
+      
+      try {
+        const { setDoc } = await import('firebase/firestore');
+        await setDoc(doc(db, 'artist_updates', updateId), activityData);
+      } catch (err) {
+        console.warn("Failed to write to artist_updates server ref, locally indexed:", err);
+      }
+    } catch (err) {
+      console.warn("Failed to approve artist on server, offline fallback succeeded:", err);
+    }
+  };
+
+  const handleRequestChanges = async (id: string) => {
+    const notes = changesNotes[id] || '';
+    if (!notes.trim()) return alert("Please specify the changes required in the text area.");
+    
+    const updates = { 
+      status: 'changes_requested' as const, 
+      adminNotes: notes,
+      updatedAt: new Date().toISOString()
+    };
+    
+    updateLocalFallbackItem('artists', id, updates);
+    setArtists(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+
+    try {
+      await updateDoc(doc(db, 'artists', id), updates);
+    } catch (err) {
+      console.warn("Failed to request changes on server:", err);
+    }
+  };
+
+  const handleRejectArtist = async (id: string) => {
+    if (!confirm("Are you sure you want to REJECT this artist submission?")) return;
+    
+    const updates = { 
+      status: 'rejected' as const,
+      updatedAt: new Date().toISOString()
+    };
+    
+    updateLocalFallbackItem('artists', id, updates);
+    setArtists(prev => prev.map(a => a.id === id ? { ...a, ...updates } : a));
+
+    try {
+      await updateDoc(doc(db, 'artists', id), updates);
+    } catch (err) {
+      console.warn("Failed to reject artist on server:", err);
+    }
+  };
+
+  const handleDeleteArtist = async (id: string) => {
+    if (!confirm("Are you sure you want to COMPLETELY DELETE this artist profile? This cannot be undone.")) return;
+    
+    deleteLocalFallbackItem('artists', id);
+    setArtists(prev => prev.filter(a => a.id !== id));
+
+    try {
+      await deleteDoc(doc(db, 'artists', id));
+    } catch (err) {
+      console.warn("Failed to delete artist on server:", err);
+    }
+  };
+
+  const handleCreateAnnouncement = async (id: string) => {
+    const text = announcementTexts[id] || '';
+    const artist = artists.find(a => a.id === id);
+    if (!artist) return;
+    if (!text.trim()) return alert("Please fill in the profile activity message.");
+    
+    const activityId = `act-${itemUuid()}`;
+    const activityData = {
+      artistId: id,
+      artistName: artist.name,
+      type: 'music_added' as const,
+      description: text,
+      createdAt: new Date().toISOString()
+    };
+
+    addLocalFallbackItem('artist_updates', activityData);
+    setAnnouncementTexts(prev => ({ ...prev, [id]: '' }));
+    alert(`Success: Posted announcement for ${artist.name}!`);
+
+    try {
+      const { setDoc } = await import('firebase/firestore');
+      await setDoc(doc(db, 'artist_updates', activityId), activityData);
+    } catch (err) {
+      console.warn("Failed to save announcement to Firestore, successfully cached locally:", err);
+    }
+  };
+
+  function itemUuid() {
+    return Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+  }
+
   if (authLoading) return <div className="min-h-screen bg-black flex items-center justify-center font-mono text-brand">INITIALIZING_SECURE_ACCESS...</div>;
   if (!profile?.isAdmin) return <Navigate to="/" replace />;
 
@@ -208,7 +350,7 @@ export default function AdminConsole() {
           </button>
 
           <div className="flex items-center gap-2">
-            {(['submissions', 'reports', 'users', 'dossier'] as AdminTab[]).map(tab => (
+            {(['submissions', 'reports', 'users', 'dossier', 'artists'] as AdminTab[]).map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
@@ -484,6 +626,248 @@ export default function AdminConsole() {
                        </div>
                     </div>
                   ))}
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === 'artists' && (
+              <motion.div
+                key="artists"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-12"
+              >
+                {/* Pending Submissions / Reviews Section */}
+                <div className="space-y-6">
+                  <div className="flex justify-between items-end">
+                     <h2 className="text-xl font-black text-white italic uppercase tracking-tighter flex items-center gap-2">
+                       <Inbox size={20} className="text-yellow-500 animate-pulse" /> ARTIST_PENDING_QUEUE [{artists.filter(a => a.status === 'pending' || a.status === 'changes_requested').length}]
+                     </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                    {artists.filter(a => a.status === 'pending' || a.status === 'changes_requested').map((art) => (
+                      <div key={art.id} className="bg-zinc-900/40 border border-white/5 p-6 flex flex-col xl:flex-row justify-between gap-8 group hover:border-yellow-500/30 transition-all">
+                        <div className="flex-1 space-y-4">
+                          <div className="flex items-center gap-3">
+                            <span className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest ${
+                              art.status === 'changes_requested' ? 'bg-orange-500/20 text-orange-500 animate-pulse' : 'bg-yellow-500/20 text-yellow-500'
+                            }`}>
+                              {art.status}
+                            </span>
+                            <span className="text-[10px] font-mono text-zinc-500 uppercase">LOCATION: {art.location || 'UNKNOWN'}</span>
+                            <span className="text-[10px] font-mono text-zinc-500 uppercase font-bold">SUBMITTER_EMAIL: {art.email}</span>
+                          </div>
+                          
+                          <div className="flex gap-4 items-start">
+                            {art.profilePicture && (
+                              <img 
+                                src={art.profilePicture} 
+                                alt={art.name} 
+                                referrerPolicy="no-referrer"
+                                className="w-16 h-16 rounded-sm object-cover border border-white/10 shrink-0" 
+                              />
+                            )}
+                            <div>
+                              <h3 className="text-lg font-black text-white italic uppercase tracking-tighter flex items-center gap-2">
+                                {art.name}
+                              </h3>
+                              <p className="text-[11px] text-zinc-400 mt-1 uppercase leading-relaxed">{art.shortBio || art.bio}</p>
+                              <div className="flex flex-wrap gap-1.5 mt-2">
+                                {art.genres.map(g => (
+                                  <span key={g} className="px-1.5 py-0.5 bg-zinc-800 text-[8px] font-mono hover:bg-zinc-700 text-zinc-300 uppercase tracking-wider rounded-sm">{g}</span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Media Links Details */}
+                          <div className="p-4 bg-black/40 border border-white/5 rounded-sm space-y-3">
+                            <h4 className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest font-black flex items-center gap-1.5 border-b border-white/5 pb-1.5">
+                              <Music size={10} className="text-brand" /> Submitted Links & Featured Audio
+                            </h4>
+                            <div className="grid grid-cols-2 gap-4 text-[10px] font-mono">
+                              <div>
+                                <p className="text-zinc-500 uppercase">SOCIAL_LINKS:</p>
+                                <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-zinc-400 uppercase">
+                                  {Object.entries(art.links || {}).filter(([_, val]) => !!val).map(([platform, val]) => (
+                                    <a key={platform} href={val} target="_blank" rel="noreferrer" className="hover:text-brand underline flex items-center gap-1">
+                                      {platform} <ExternalLink size={8} />
+                                    </a>
+                                  ))}
+                                  {Object.values(art.links || {}).filter(v => !!v).length === 0 && <span className="text-zinc-600">NONE</span>}
+                                </div>
+                              </div>
+                              <div>
+                                <p className="text-zinc-500 uppercase">FEATURED_AUDIO_VIDEO:</p>
+                                <div className="space-y-1 mt-1">
+                                  {art.featuredSong?.title && (
+                                    <div className="text-zinc-400 flex items-center gap-1">
+                                      <span className="text-zinc-600">[SONG]</span> {art.featuredSong.title}
+                                    </div>
+                                  )}
+                                  {art.featuredVideo?.title && (
+                                    <div className="text-zinc-400 flex items-center gap-1">
+                                      <span className="text-zinc-600">[VIDEO]</span> {art.featuredVideo.title}
+                                    </div>
+                                  )}
+                                  {!art.featuredSong?.title && !art.featuredVideo?.title && <span className="text-zinc-600">NONE PROVIDED</span>}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {art.adminNotes && (
+                            <div className="p-3 bg-orange-950/20 border border-orange-500/20 text-orange-400 font-mono text-[9px] uppercase">
+                              Correction Notes Sent: {art.adminNotes}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Approvals Action Board */}
+                        <div className="xl:w-80 shrink-0 flex flex-col justify-between gap-4 border-t xl:border-t-0 xl:border-l border-white/5 pt-4 xl:pt-0 xl:pl-6">
+                          <div className="space-y-3">
+                            <label className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest font-black block">Correction / Feedback Commentary</label>
+                            <textarea
+                              placeholder="Describe changes the artist must fix before getting published..."
+                              value={changesNotes[art.id] || ''}
+                              onChange={(e) => setChangesNotes(prev => ({ ...prev, [art.id]: e.target.value }))}
+                              className="w-full bg-black border border-white/10 rounded-sm p-2 text-[10px] font-mono text-white h-20 outline-none focus:border-brand"
+                            />
+                            <div className="flex gap-2">
+                              <button 
+                                onClick={() => handleRequestChanges(art.id)}
+                                className="flex-1 py-2 bg-orange-950/20 hover:bg-orange-600 hover:text-black border border-orange-500/30 text-orange-400 text-[9px] font-bold uppercase tracking-wider transition-all"
+                              >
+                                Send Corrections
+                              </button>
+                              <button 
+                                onClick={() => handleRejectArtist(art.id)}
+                                className="px-3 bg-red-950/20 hover:bg-red-600 hover:text-white border border-red-500/30 text-red-500 transition-all flex items-center justify-center"
+                                title="Reject Application"
+                              >
+                                <XCircle size={14} />
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2 border-t border-white/5 pt-3">
+                            <p className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest font-bold">Approve & Publish As:</p>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleApproveArtist(art.id, 'community')}
+                                className="flex-1 py-3 bg-zinc-900 border border-zinc-700 text-zinc-300 hover:bg-white hover:text-black text-[9px] font-black tracking-widest uppercase transition-all"
+                              >
+                                + Community Resident
+                              </button>
+                              <button
+                                onClick={() => handleApproveArtist(art.id, 'verified')}
+                                className="flex-1 py-3 bg-brand/10 border border-brand/35 text-brand hover:bg-brand hover:text-white text-[9px] font-black tracking-widest uppercase transition-all"
+                              >
+                                * High-tier Verified
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {artists.filter(a => a.status === 'pending' || a.status === 'changes_requested').length === 0 && (
+                      <div className="text-center p-12 border border-dashed border-white/5 opacity-30 text-[10px] uppercase font-mono italic">
+                        No pending artist applications.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Published Directory Manager */}
+                <div className="space-y-6">
+                  <div className="border-t border-white/5 pt-8">
+                     <h2 className="text-xl font-black text-white italic uppercase tracking-tighter flex items-center gap-2">
+                       <Award size={20} className="text-brand" /> PUBLISHED_ARTISTS_CATALOG [{artists.filter(a => a.status === 'approved').length}]
+                     </h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {artists.filter(a => a.status === 'approved').map(art => (
+                      <div key={art.id} className="bg-black/40 border border-white/5 p-6 hover:border-brand/20 transition-all flex flex-col md:flex-row justify-between gap-6 group">
+                        <div className="flex-grow space-y-4">
+                          <div className="flex items-center gap-3">
+                            <span className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest ${
+                              art.verificationStatus === 'verified' ? 'bg-brand/20 text-brand' : 'bg-zinc-700/40 text-zinc-400'
+                            }`}>
+                              {art.verificationStatus === 'verified' ? '• Verified Resident' : '• Community artist'}
+                            </span>
+                            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">VISITS: {art.metrics?.views || 0}</span>
+                            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">CLICKS: {art.metrics?.clicks || 0}</span>
+                            <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">FOLLOWERS: {art.metrics?.followerCount || 0}</span>
+                          </div>
+
+                          <div className="flex gap-4 items-start">
+                            {art.profilePicture && (
+                              <img 
+                                src={art.profilePicture} 
+                                alt={art.name} 
+                                referrerPolicy="no-referrer"
+                                className="w-12 h-12 object-cover rounded-sm border border-white/10 shrink-0" 
+                              />
+                            )}
+                            <div>
+                              <h3 className="text-md font-black text-white uppercase italic tracking-tight">{art.name}</h3>
+                              <p className="text-[10px] text-zinc-500 font-mono mt-0.5 uppercase">{art.location || 'Location Pending'}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Live Announcements and Verification Overrides */}
+                        <div className="md:w-96 shrink-0 flex flex-col justify-between gap-4 md:border-l border-white/5 md:pl-6">
+                          <div className="space-y-2">
+                            <label className="text-[8px] font-mono text-zinc-500 uppercase tracking-widest font-black block">Post New Activity Announcement</label>
+                            <div className="flex gap-2">
+                              <input
+                                type="text"
+                                placeholder="e.g., Just dropped a brand new video!"
+                                value={announcementTexts[art.id] || ''}
+                                onChange={(e) => setAnnouncementTexts(prev => ({ ...prev, [art.id]: e.target.value }))}
+                                className="flex-1 bg-zinc-950 border border-white/10 rounded-sm px-2 py-1.5 text-[10px] font-mono text-white outline-none focus:border-brand"
+                              />
+                              <button
+                                onClick={() => handleCreateAnnouncement(art.id)}
+                                className="px-3 bg-brand/20 border border-brand/30 hover:bg-brand text-brand hover:text-white text-[9px] font-black uppercase transition-all shrink-0"
+                              >
+                                Post
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center justify-between gap-4 border-t border-white/5 pt-3 text-[10px] font-mono">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleApproveArtist(art.id, art.verificationStatus === 'verified' ? 'community' : 'verified')}
+                                className="px-2 py-1 border border-white/10 hover:border-brand/40 text-zinc-400 hover:text-brand transition-colors text-[8px] uppercase"
+                              >
+                                Toggle Tier
+                              </button>
+                            </div>
+
+                            <button
+                              onClick={() => handleDeleteArtist(art.id)}
+                              className="text-zinc-600 hover:text-red-500 font-bold transition-all text-[8px] uppercase tracking-wider flex items-center gap-1"
+                            >
+                              <Trash2 size={10} /> Delete Artist
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {artists.filter(a => a.status === 'approved').length === 0 && (
+                      <div className="text-center p-12 border border-dashed border-white/5 opacity-20 text-[10px] uppercase font-mono italic">
+                        No published artists. Approve pending list submissions to build cards.
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )}

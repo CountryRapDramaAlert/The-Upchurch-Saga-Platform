@@ -1,6 +1,95 @@
 import { collection, addDoc, getDocs, writeBatch, doc } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { Evidence, Lawsuit, DossierProfile } from '../types';
+import { Evidence, Lawsuit, DossierProfile, Artist } from '../types';
+
+export const HIGH_FIDELITY_ARTIST_SEEDS: Omit<Artist, 'id'>[] = [
+  {
+    name: "Sonny Bama",
+    email: "sonny@bama.com",
+    bio: "A seasoned veteran of the Southern Rap & Hick-Hop crossover scene. Combining traditional southern storytelling with deep trunk-rattling beats, Sonny Bama represents the authentic blue-collar lifestyle of Mobile, Alabama. Respected across the entire country rap landscape, he has consistently released music that is proud, independent, and strictly southern.",
+    shortBio: "Dynamic southern rap pioneer bridging Hick-Hop and authentic blue-collar storytelling.",
+    profilePicture: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=400&q=80",
+    bannerImage: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&q=80",
+    genres: ["Southern Rap", "Hick-Hop", "Southern Rock"],
+    location: "Mobile, Alabama",
+    verificationStatus: "verified",
+    links: {
+      spotify: "https://open.spotify.com/artist/dummy",
+      youtube: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      facebook: "https://facebook.com/sonnybama",
+      instagram: "https://instagram.com/sonnybama"
+    },
+    featuredSong: { title: "Mobile Bay", link: "https://open.spotify.com/track/dummy" },
+    featuredVideo: { title: "Country As Hell", link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
+    status: "approved",
+    metrics: { views: 342, clicks: 124, followerCount: 45, favoritesCount: 22 },
+    createdAt: "2018-05-10T12:00:00Z",
+    updatedAt: "2026-06-03T12:00:00Z"
+  },
+  {
+    name: "Katie Noel",
+    email: "katie@noelmusic.com",
+    bio: "Hailing from East Tennessee, Katie Noel is a trailblazer for female artists in the Hick-Hop space. She burst onto the scene with viral songs celebrating lifted trucks, deep country fishing, and backcountry trails, building a massive cult-like following completely independently. Her fierce focus on staying sovereign from major labels has earned her high respect in the underground.",
+    shortBio: "Trailblazer country-rap singer-songwriter hailing from East Tennessee.",
+    profilePicture: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80",
+    bannerImage: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&q=80",
+    genres: ["Hick-Hop", "Country Rap", "Independent Country"],
+    location: "Asheville, NC",
+    verificationStatus: "verified",
+    links: {
+      spotify: "https://open.spotify.com/artist/dummy2",
+      youtube: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      instagram: "https://instagram.com/katienoel"
+    },
+    featuredSong: { title: "Diesel Gang", link: "https://open.spotify.com/track/dummy2" },
+    featuredVideo: { title: "Blood Red Dirt", link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ" },
+    status: "approved",
+    metrics: { views: 489, clicks: 215, followerCount: 78, favoritesCount: 41 },
+    createdAt: "2019-07-15T16:00:00Z",
+    updatedAt: "2026-06-03T12:00:00Z"
+  },
+  {
+    name: "Cody Outlaw",
+    email: "cody@outlawmusic.co",
+    bio: "Representing the gritty roots of Outlaw Country mixed with massive Southern Rock chord shifts, Cody Outlaw brings heavy guitar riffs and gravelly vocals to independent music lovers worldwide. His lyrics dive deep into rural life, personal recovery, and absolute sovereignty from label gatekeepers.",
+    shortBio: "Gravelly Outlaw Country and Southern Rock guitar shredder celebrating full sovereignty.",
+    profilePicture: "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=400&q=80",
+    bannerImage: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=1200&q=80",
+    genres: ["Outlaw Country", "Southern Rock", "Underground Artists"],
+    location: "Cheatham County, TN",
+    verificationStatus: "community",
+    links: {
+      spotify: "https://open.spotify.com/artist/dummy3",
+      youtube: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      twitter: "https://twitter.com/codyoutlaw"
+    },
+    featuredSong: { title: "Guns and Dirt Roads", link: "https://open.spotify.com/track/dummy3" },
+    status: "approved",
+    metrics: { views: 195, clicks: 54, followerCount: 21, favoritesCount: 9 },
+    createdAt: "2020-04-12T09:00:00Z",
+    updatedAt: "2026-06-03T12:00:00Z"
+  },
+  {
+    name: "Sarah Holler",
+    email: "sarah@hollermusic.org",
+    bio: "Sarah Holler combines ethereal Appalachia acoustic picking with hard-hitting southern trap drum structures, creating a dark, hypnotic soundscape that explores the mystery and rich, haunting heritage of the deep southern woods.",
+    shortBio: "Independent Appalachia folk singer blending dark southern gothic rock with modern trap elements.",
+    profilePicture: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80",
+    bannerImage: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=1200&q=80",
+    genres: ["Southern Trap", "Underground Artists", "Southern Rock"],
+    location: "Pikeville, Kentucky",
+    verificationStatus: "unverified",
+    links: {
+      youtube: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      soundcloud: "https://soundcloud.com/sarahholler"
+    },
+    featuredSong: { title: "Whispering Pines (Trap Remix)", link: "https://soundcloud.com/sarahholler/ pines" },
+    status: "pending",
+    metrics: { views: 12, clicks: 2, followerCount: 1, favoritesCount: 0 },
+    createdAt: "2026-05-25T11:00:00Z",
+    updatedAt: "2026-05-25T11:00:00Z"
+  }
+];
 
 export const HIGH_FIDELITY_EVIDENCE_SEEDS: Omit<Evidence, 'id'>[] = [
   {
@@ -425,6 +514,7 @@ export async function seedFirestore() {
   localStorage.setItem('firestore_fallback_evidence', JSON.stringify(HIGH_FIDELITY_EVIDENCE_SEEDS.map((item, idx) => ({ id: `seed-ev-${idx}`, ...item }))));
   localStorage.setItem('firestore_fallback_lawsuits', JSON.stringify(HIGH_FIDELITY_LAWSUITS_SEEDS.map((item, idx) => ({ id: `seed-lw-${idx}`, ...item }))));
   localStorage.setItem('firestore_fallback_dossier', JSON.stringify(HIGH_FIDELITY_DOSSIER_SEEDS.map((item, idx) => ({ id: `seed-ds-${idx}`, ...item }))));
+  localStorage.setItem('firestore_fallback_artists', JSON.stringify(HIGH_FIDELITY_ARTIST_SEEDS.map((item, idx) => ({ id: `seed-art-${idx}`, ...item }))));
   
   // Notify active listeners to reload lists immediately
   window.dispatchEvent(new Event('local-firestore-change'));
@@ -459,6 +549,16 @@ export async function seedFirestore() {
     if (existingDossier.empty) {
       for (const item of HIGH_FIDELITY_DOSSIER_SEEDS) {
         const newDocRef = doc(dossierCol);
+        batch.set(newDocRef, item);
+      }
+    }
+
+    // 4. Artists
+    const artistsCol = collection(db, 'artists');
+    const existingArtists = await getDocs(artistsCol);
+    if (existingArtists.empty) {
+      for (const item of HIGH_FIDELITY_ARTIST_SEEDS) {
+        const newDocRef = doc(artistsCol);
         batch.set(newDocRef, item);
       }
     }

@@ -39,97 +39,98 @@ const INITIAL_NODES: Omit<SimulationNode, 'x' | 'y' | 'vx' | 'vy' | 'fx' | 'fy'>
     id: 'ru',
     name: 'Ryan Upchurch',
     type: 'people',
-    description: 'Central figure of the Country Rap ecosystem. Hick-hop pioneer, owner of Hollar Hood/Creek squad. Multi-million dollar defamation verdict subject.',
+    description: 'Central figure of the Country Rap ecosystem. Hick-hop pioneer, owner of Hollar Hood/Creek squad. Multi-million dollar defamation verdict subject. Used a master-level viewer base to try to silence early critics like MoKoN before the scene turned.',
     startYear: 2015,
     era: '2015-Present',
     alias: ['Ryan Ashley Upchurch', 'Upchurch the Redneck', 'RHEC Outlaw'],
     role: 'Central Subject',
-    associatedFactions: ['Creeksquad', 'RHEC']
+    associatedFactions: ['Creeksquad', 'RHEC'],
+    youtubeId: 'XpDN4ZRctDM'
   },
   {
     id: 'ac',
     name: 'Adam Calhoun',
     type: 'people',
-    description: 'Country-rapper, long-term collaborator, and volatile rival. Shared historic stages but reignited a heavy battle in early 2025 with diss tracks like "DOOIN MORE RAPPIN".',
+    description: 'Country-rapper, long-term collaborator, and volatile rival. Shared historic stages (collaborated on the Hoss album) but split after a massive ego and financial rift, accusing each other of being unstable or fake.',
     startYear: 2019,
     era: '2019-Present',
     alias: ['Acal'],
-    role: 'Influential Rapper & Dual Rival'
+    role: 'Dual Rival / Challenger'
   },
   {
     id: 'mk',
     name: 'MoKoN',
     type: 'people',
-    description: 'Original analytical whistleblower who began documentally archiving Upchurch\'s chronological contradictions and corporate disputes years before they became mainstream.',
+    description: 'The ultimate pioneer of anti-establishment independent media in country rap. Making music since 2001, mastering multiple DAWs to run dynamic home studios independent of Nashville corporatism. Launched SeekingTheTruth News to archive deleted streams, exposing Upchurch\'s behavior in 2020 while facing initial mass backlash.',
     startYear: 2019,
     era: '2019-Present',
-    alias: ['MK_Investigator', 'Mokon commenting'],
-    role: 'Independent Commentator & Archivist',
+    alias: ['MK_Investigator', 'SeekingTheTruth News', 'MoKoN commenting'],
+    role: 'OG Whistleblower',
     youtubeId: 'VAkHWmEhUr0'
   },
   {
     id: 'tt',
     name: 'Triple T',
     type: 'people',
-    description: 'Archive community member and host of Triple T channel tracking grassroots facts & evidence timelines.',
+    description: 'Operator of Triple T Channel, serving as primary music news / country rap tracker. Frequently stepped into the crosshairs to document feuds and analyze diss tracks. Crucially, Triple T and his community members were originally some of the most malicious and toxic trolls in Creek Squad, defending Ryan fiercely against MoKoN.',
     startYear: 2020,
     era: '2020-Present',
-    alias: ['Triple T Channel'],
-    role: 'Grassroots Archivist'
+    alias: ['Triple TTT Channel', 'Triple T News'],
+    role: 'Mainstream Scene Tracker / Ex-Creeksquad Troll'
   },
   {
     id: 'jt',
     name: 'WhoTFisJustinTime',
     type: 'people',
-    description: 'Country rap commentator and extended scene participant. Described the Calhoun-Upchurch heated feuds as reminiscent of "Pro Wrestling" structures.',
+    description: 'Country rap commentator, collaborator, and backline manager. Fought in the backline war against Upchurch alongside Uncle Dubb, exposing the severe turbulence and paranoia of managing a megastar under his independent setup.',
     startYear: 2020,
     era: '2020-Present',
     alias: ['Justin Time'],
-    role: 'Community Observer'
+    role: 'Backline Insider & Commentator'
   },
   {
     id: 'ud',
     name: 'Uncle Dubb',
     type: 'people',
-    description: 'Underground country rap collaborator and early Creek alliance music partner.',
+    description: 'Underground country rap manager and collaborator. Teamed with WhoTFisJustinTime to counter-vlog Ryan Upchurch after an all-out digital assault claimed they were untrustworthy gatekeepers.',
     startYear: 2018,
     era: '2018-2024',
-    role: 'Musical Associate'
+    role: 'Underground Manager'
   },
   {
     id: 'jg',
     name: 'Johnny Gobble (Dagburn)',
     type: 'people',
-    description: 'Controversial online commentary personality involved in the "Big LiL GobbStoppa" beef. Later received a public offer from Upchurch to fund Cumberland Heights rehab treatment.',
+    description: 'Controversial outlaw commentary personality leading Dagburn Nation. Clashed with commercial acts to debate "who actually lived the outlaw recovery life" vs playing characters on YouTube for money.',
     startYear: 2022,
     era: '2022-Present',
-    alias: ['Johnny Gobble', 'GobbStoppa'],
-    role: 'Feuding Commentary Personality'
+    alias: ['Johnny Gobble', 'GobbStoppa', 'Dagburn'],
+    role: 'Outlaw Commentator'
   },
   {
     id: 'r7',
     name: 'Reaper7Man',
     type: 'people',
-    description: 'Underground metal/rapper who escalated local community frictions by outputting an explicit Spotify diss "FUCK CREEK SQUAD" directly targeting Ryan Upchurch.',
+    description: 'Underground dark trap metal outlier mixing southern grit with intense themes. Released explicit disses against Ryan Upchurch, provoking a mass-reporting and distribution suppression campaign by Creeksquad.',
     startYear: 2021,
     era: '2021-Present',
     alias: ['REAPER7MAN'],
-    role: 'Independent Diss Artist'
+    role: 'Sonic Challenger'
   },
   {
     id: 'md',
     name: 'MikeyD615',
     type: 'people',
-    description: 'Independent southern rap community associate and occasional contributor to collaborative circles.',
+    description: 'Independent southern rap collaborator. Associated with the Tennessee/Nashville operational backend nodes (JJV / HBR) handling local video production, booking, and promotion.',
     startYear: 2020,
     era: '2020-Present',
-    role: 'Collaborator'
+    role: 'TN Circle Associate'
   },
   {
     id: 'db',
     name: 'Daniel Bishop',
     type: 'people',
-    description: 'Prolific independent filmmaker, video editor, and collaborator behind early high-production Upchurch music videos.',
+    description: 'Independent filmmaker and director behind high-production Upchurch videos. Clashed alongside outlaw creators against overly commercialized mainstream Hick-hop adaptations.',
     startYear: 2019,
     era: '2019-2024',
     role: 'Director / Visual Creator'
@@ -138,21 +139,22 @@ const INITIAL_NODES: Omit<SimulationNode, 'x' | 'y' | 'vx' | 'vy' | 'fx' | 'fy'>
     id: 'jr',
     name: 'Jelly Roll',
     type: 'people',
-    description: 'Mainstream country rock giant. Encountered severe public gatekeeping from Upchurch, culminating in the biting 2026 diss track "Been Behind" targeting Jelly and wife Bunnie Xo.',
+    description: 'Mainstream country rock powerhouse. Transformed from underground rap to commercial titan; faced intense gatekeeping paranoia and diss tracks ("Been Behind") from RHEC.',
     startYear: 2021,
     era: '2021-Present',
     alias: ['JellyRoll'],
-    role: 'Mainstream Megastar'
+    role: 'Mainstream Titan'
   },
   {
     id: 'cm',
     name: 'Chase Matthew',
     type: 'people',
-    description: 'Rising country star historically close to Upchurch who faced verbal fallout for transitioning from independent work to major record label structures.',
+    description: 'Rising country chart artist who transitioned from independent circles to major label structures, triggering RHEC accusations regarding "industry loyalty."',
     startYear: 2021,
     era: '2021-Present',
-    role: 'Mainstream Artist'
+    role: 'Rising Country Star'
   },
+  // Keep original legal/liability nodes as they are highly relevant
   {
     id: 'dr',
     name: 'Daniel Rodni',
@@ -205,7 +207,7 @@ const INITIAL_NODES: Omit<SimulationNode, 'x' | 'y' | 'vx' | 'vy' | 'fx' | 'fy'>
     id: 'rhec',
     name: 'RHEC Movement',
     type: 'faction',
-    description: 'Raise Hell Eat Cornbread. The foundational redneck-lifestyle brand and ideological anchor representing independent southern resilience.',
+    description: 'Raise Hell Eat Chicken (Redneck Nation). Controlled the largest organic viewer base on YouTube, representing Southern independence.',
     startYear: 2015,
     era: '2015-Present'
   },
@@ -213,15 +215,31 @@ const INITIAL_NODES: Omit<SimulationNode, 'x' | 'y' | 'vx' | 'vy' | 'fx' | 'fy'>
     id: 'creeksquad',
     name: 'Creek Squad',
     type: 'faction',
-    description: 'Ryan Upchurch\'s core fan collective. A fiercely unified army capable of driving viral visibility or running localized boycotts.',
+    description: 'Ryan Upchurch\'s primary defense force and inner circle. Fiercely targeted anyone labeled a "clout chaser" or "industry plant".',
     startYear: 2015,
     era: '2015-Present'
+  },
+  {
+    id: 'jjv_circle',
+    name: 'JJV / HBR Circle',
+    type: 'faction',
+    description: 'Operational nodes handling Tennessee/Nashville local media production, independent booking, and street-level promotion.',
+    startYear: 2020,
+    era: '2020-Present'
   },
   {
     id: 'dagburn_nation',
     name: 'Dagburn Nation',
     type: 'faction',
-    description: 'Commentary fanbase aligned with Johnny Gobble, interacting frequently with alternative archives.',
+    description: 'Commentary fanbase aligned with Johnny Gobble, interacting frequently with alternative archives and anti-industry voices.',
+    startYear: 2021,
+    era: '2021-Present'
+  },
+  {
+    id: 'dark_trap_outlaws',
+    name: 'Dark Trap Outlaws',
+    type: 'faction',
+    description: 'Fringe outlaw creators blending dark trap elements with acoustic southern grit, operating parallel to the independent union.',
     startYear: 2021,
     era: '2021-Present'
   },
@@ -245,17 +263,17 @@ const INITIAL_NODES: Omit<SimulationNode, 'x' | 'y' | 'vx' | 'vy' | 'fx' | 'fy'>
   // MEDIA NODES
   {
     id: 'seeking_truth',
-    name: 'SeekingTheTruth News',
+    name: 'SeekingTheTruth News (MoKoN)',
     type: 'media',
-    description: 'Alternative streaming channels and media outlets seeking true crime transparency during the California teenager investigation.',
-    startYear: 2022,
-    era: '2022-Present'
+    description: 'Central digital archive for deleted livestreams, IG live screen-recordings, DAW-driven exposes, and contract disputes.',
+    startYear: 2019,
+    era: '2019-Present'
   },
   {
     id: 'triple_t_channel',
     name: 'Triple T Channel',
     type: 'media',
-    description: 'Archivism outlet collecting livestream snippets, comment logs, and full timeline analysis streams.',
+    description: 'Independent Music News and Country Rap Dashboard, analyzing diss tracks and tracking grassroots facts & evidence.',
     startYear: 2020,
     era: '2020-Present'
   },
@@ -279,18 +297,18 @@ const INITIAL_NODES: Omit<SimulationNode, 'x' | 'y' | 'vx' | 'vy' | 'fx' | 'fy'>
   },
   {
     id: 'mokon_commentary_era',
-    name: 'Mokon Commentary Blockades (2021)',
+    name: 'Institutional War: MoKoN vs. Ryan Upchurch (2020)',
     type: 'event',
-    description: 'Whistleblower MoKoN points out heavy contradictions in Upchurch\'s public claims, triggering years of coordinated retaliatory blockades and social commentary wars.',
-    startYear: 2021,
-    era: 'July 2021',
+    description: 'MoKoN steps forward as the pioneer of exposing political hypocrisy and targeted harassment in the RHEC camp, taking isolated heat from defenders who later copied his stance.',
+    startYear: 2020,
+    era: '2020-Present',
     youtubeId: 'VAkHWmEhUr0'
   },
   {
     id: 'reaper_spotify_attack',
     name: 'Reaper7man "FUCK CREEK SQUAD" Diss (2021)',
     type: 'event',
-    description: 'Underground artist Reaper7man launches a direct lyrical attack on Spotify, permanently fracturing relations between independent factions.',
+    description: 'Underground artist Reaper7man launches a direct lyrical attack, met with intense mass-reporting by the Creeksquad fanbase to suppress streaming.',
     startYear: 2021,
     era: 'November 2021'
   },
@@ -351,18 +369,21 @@ const INITIAL_LINKS: SimulationLink[] = [
   // core associations with factions
   { id: 'l_ru_rhec', source: 'ru', target: 'rhec', relationship: 'Community Membership', description: 'Ryan Upchurch founded and pioneered the Raise Hell Eat Cornbread movement.', startYear: 2015 },
   { id: 'l_ru_creeksquad', source: 'ru', target: 'creeksquad', relationship: 'Community Membership', description: 'Ryan Upchurch created and commands the Creek Squad fanbase.', startYear: 2015 },
-  
+  { id: 'l_tt_creeksquad', source: 'tt', target: 'creeksquad', relationship: 'Community Membership', description: 'Triple T and his community members were originally some of the most malicious and toxic trolls inside Creek Squad, defending Ryan Upchurch against MoKoN\'s early exposure vlogs.', startYear: 2020 },
+  { id: 'l_md_jjv', source: 'md', target: 'jjv_circle', relationship: 'Association', description: 'MikeyD615 acts within the TN circle (JJV / HBR) handles regional bookings and street-promo.', startYear: 2020 },
+  { id: 'l_md_ind_art', source: 'md', target: 'independent_artists', relationship: 'Community Membership', description: 'MikeyD615 collaborates with underground country rap circles.', startYear: 2020 },
+
   // vara incident (2018)
   { id: 'l_ru_jl', source: 'ru', target: 'jl', relationship: 'Conflict', description: 'Destruction of hand-painted portrait paintings leads to VARA legal fallout.', startYear: 2018 },
   { id: 'l_ru_vara_inc', source: 'ru', target: 'vara_incident', relationship: 'Conflict', description: 'Blasts portraits with automatic rifle on camera.', startYear: 2018 },
   { id: 'l_jl_vara_inc', source: 'jl', target: 'vara_incident', relationship: 'Alliance', description: 'Plaintiff fine-artist suing over painting destruction.', startYear: 2018 },
 
   // early rapper rifts (2019-2021)
-  { id: 'l_ru_ac', source: 'ru', target: 'ac', relationship: 'Historical Collaboration', description: 'Long collaborative history of hits squashed by 2025 disses.', startYear: 2019 },
-  { id: 'l_ac_creeksquad', source: 'ac', target: 'creeksquad', relationship: 'Alliance', description: 'Adam Calhoun establishes dual alignment with Creek Squad fans.', startYear: 2019 },
+  { id: 'l_ru_ac', source: 'ru', target: 'ac', relationship: 'Historical Collaboration', description: 'Superb country-rap collaborators on the "Hoss" album whose friendship ruptured over extreme rifts, ego, and cultural Southern claims.', startYear: 2019 },
+  { id: 'l_ac_creeksquad', source: 'ac', target: 'creeksquad', relationship: 'Alliance', description: 'Adam Calhoun establishes dual alignment with Creek Squad fans initially.', startYear: 2019 },
   { id: 'l_ac_ind_art', source: 'ac', target: 'independent_artists', relationship: 'Community Membership', description: 'Adam Calhoun stands as a core pillar of the independent hick-hop circle.', startYear: 2019 },
   { id: 'l_ud_ind_art', source: 'ud', target: 'independent_artists', relationship: 'Community Membership', description: 'Uncle Dubb collaborates heavily in independent underground rap.', startYear: 2018 },
-  { id: 'l_ru_ud', source: 'ru', target: 'ud', relationship: 'Historical Collaboration', description: 'Uncle Dubb collaborates on early country rap singles.', startYear: 2018 },
+  { id: 'l_ru_ud', source: 'ru', target: 'ud', relationship: 'Conflict', description: 'Upchurch launched an all-out digital assault, accusing Uncle Dubb of being an untrustworthy gatekeeper manipulating smaller artists.', startYear: 2018 },
   { id: 'l_ru_db', source: 'ru', target: 'db', relationship: 'Association', description: 'Daniel Bishop films and directs multiple high-heat music videos.', startYear: 2019 },
 
   // Combs & flag debate (2021)
@@ -370,23 +391,24 @@ const INITIAL_LINKS: SimulationLink[] = [
   { id: 'l_creeksquad_flag_con', source: 'creeksquad', target: 'flag_controversy', relationship: 'Audience Overlap', description: 'Fans mobilize to support outpatient Outlaw branding.', startYear: 2021 },
 
   // mokon whistleblower epoch (2021)
-  { id: 'l_ru_mk', source: 'ru', target: 'mk', relationship: 'Conflict', description: 'Ongoing vocal disputes after Mokon uploads video-transcripts detailing contradictions.', startYear: 2021 },
-  { id: 'l_mk_mokon_ev', source: 'mk', target: 'mokon_commentary_era', relationship: 'Alliance', description: 'Mokon defends truth-checking commentary reports.', startYear: 2021 },
-  { id: 'l_ru_mokon_ev', source: 'ru', target: 'mokon_commentary_era', relationship: 'Conflict', description: 'Ryan blockades comments and designates Mokon a clout-chaser.', startYear: 2021 },
-  { id: 'l_tt_triple_t', source: 'tt', target: 'triple_t_channel', relationship: 'Community Membership', description: 'Commentator Triple T runs the Triple T evidence hub.', startYear: 2020 },
-  { id: 'l_mk_tt_ch', source: 'mk', target: 'triple_t_channel', relationship: 'Association', description: 'Mokon\'s evidence logs are reviewed and broadcasted by Triple T.', startYear: 2021 },
+  { id: 'l_ru_mk', source: 'ru', target: 'mk', relationship: 'Conflict', description: 'Institutional War: MoKoN vs. Ryan Upchurch & The Retrospective Hypocrisy. MoKoN called out Ryan\'s behavior in 2020 while facing heavy backlash.', startYear: 2019 },
+  { id: 'l_mk_mokon_ev', source: 'mk', target: 'mokon_commentary_era', relationship: 'Alliance', description: 'Mokon defends truth-checking commentary reports against a massive network of attackers who later copied his stance.', startYear: 2020 },
+  { id: 'l_ru_mokon_ev', source: 'ru', target: 'mokon_commentary_era', relationship: 'Conflict', description: 'Ryan blockades comments and initiates smear campaigns alongside Creeksquad fan bases.', startYear: 2020 },
+  { id: 'l_tt_triple_t', source: 'tt', target: 'triple_t_channel', relationship: 'Community Membership', description: 'Commentator Triple T runs the Triple T evidence hub tracking grassroots country rap news.', startYear: 2020 },
+  { id: 'l_mk_tt_ch', source: 'mk', target: 'triple_t_channel', relationship: 'Conflict', description: 'Vocal conflict; Triple T and his community members originally acted as the most toxic trolls in Creeksquad aggressively trying to silence MoKoN.', startYear: 2020 },
   { id: 'l_jt_tt_ch', source: 'jt', target: 'triple_t_channel', relationship: 'Coverage', description: 'Justin Time participates in commentary circles reviewing raw video feeds.', startYear: 2020 },
-  { id: 'l_ru_jt', source: 'ru', target: 'jt', relationship: 'Association', description: 'Justin Time observes and comments on ongoing Upchurch shifts.', startYear: 2020 },
+  { id: 'l_ru_jt', source: 'ru', target: 'jt', relationship: 'Conflict', description: 'RHEC launched digital assault accusing Justin Time of manipulation; Justin counter vlogged exposing working behind-the-scenes hurdles.', startYear: 2020 },
 
   // reaper attack (2021)
   { id: 'l_ru_r7', source: 'ru', target: 'r7', relationship: 'Conflict', description: 'Ryan Upchurch responds in viral social media tirades to Reaper\'s diss track.', startYear: 2021 },
-  { id: 'l_r7_attack', source: 'r7', target: 'reaper_spotify_attack', relationship: 'Alliance', description: 'Reaper7man releases explicit "FUCK CREEK SQUAD" diss on Spotify.', startYear: 2021 },
+  { id: 'l_r7_attack', source: 'r7', target: 'reaper_spotify_attack', relationship: 'Alliance', description: 'Reaper7man releases explicit "FUCK CREEK SQUAD" diss on Spotify, trying to dismantle Ryan\'s "G.O.A.T." status.', startYear: 2021 },
   { id: 'l_ru_r7_attack', source: 'ru', target: 'reaper_spotify_attack', relationship: 'Conflict', description: 'Target of the explicit Creek Squad country rap diss.', startYear: 2021 },
+  { id: 'l_creeksquad_r7', source: 'creeksquad', target: 'r7', relationship: 'Conflict', description: 'Creeksquad fan base flooded comments and systematically suppressed Reaper7man\'s distribution through mass-reporting.', startYear: 2021 },
 
   // gobbstoppa & rehab (2022)
   { id: 'l_ru_jg', source: 'ru', target: 'jg', relationship: 'Conflict', description: 'Volatile digital clash leading to the "Big LiL GobbStoppa" diss track.', startYear: 2022 },
-  { id: 'l_jg_nation', source: 'jg', target: 'dagburn_nation', relationship: 'Community Membership', description: 'Johnny Gobble leads Dagburn Nation channels.', startYear: 2022 },
-  { id: 'l_jg_feud', source: 'jg', target: 'johnny_gobble_feud', relationship: 'Conflict', description: 'Sparks extensive online feuding across TikTok and YouTube.', startYear: 2022 },
+  { id: 'l_jg_nation', source: 'jg', target: 'dagburn_nation', relationship: 'Community Membership', description: 'Johnny Gobble leads Dagburn Nation channels, fighting Hick-Hop commercialization.', startYear: 2022 },
+  { id: 'l_jg_feud', source: 'jg', target: 'johnny_gobble_feud', relationship: 'Conflict', description: 'Sparks extensive online feuding across TikTok and YouTube over who "actually lived the outlaw life" vs playing a character.', startYear: 2022 },
   { id: 'l_ru_jg_feud', source: 'ru', target: 'johnny_gobble_feud', relationship: 'Conflict', description: 'Releases diss track, later offering Cumberland Heights rehab treatment.', startYear: 2022 },
 
   // rodni timeline (2022 -> 2026)
@@ -399,8 +421,8 @@ const INITIAL_LINKS: SimulationLink[] = [
   { id: 'l_dr_rob_rodni_spec', source: 'dr_rob', target: 'rodni_speculation', relationship: 'Conflict', description: 'Subject of true crime fundraising hoax accusations.', startYear: 2022 },
 
   // secondary mainstream fallouts (2021 -> present)
-  { id: 'l_ru_jr', source: 'ru', target: 'jr', relationship: 'Conflict', description: 'Severe criticism targeting Jelly Roll for industry fence-sitting and major label signing.', startYear: 2021 },
-  { id: 'l_jr_nashville', source: 'jr', target: 'nashville_industry', relationship: 'Community Membership', description: 'Jelly Roll achieves major Nashville mainstream country and rock successes.', startYear: 2021 },
+  { id: 'l_ru_jr', source: 'ru', target: 'jr', relationship: 'Conflict', description: 'Severe criticism targeting Jelly Roll for major label signing. Shifting alliances triggered paranoia within RHEC regarding corporate authenticity.', startYear: 2021 },
+  { id: 'l_jr_nashville', source: 'jr', target: 'nashville_industry', relationship: 'Community Membership', description: 'Jelly Roll achieves major Nashville mainstream country and rock successes, avoiding petty vlog wars.', startYear: 2021 },
   { id: 'l_ru_cm', source: 'ru', target: 'cm', relationship: 'Conflict', description: 'Friction following Chase Matthew\'s mainstream label signing trajectory.', startYear: 2021 },
   { id: 'l_ru_jelly_diss', source: 'ru', target: 'jelly_roll_diss', relationship: 'Conflict', description: 'Drops the direct diss track "Been Behind" targeting Jelly and Bunnie Xo.', startYear: 2026 },
   { id: 'l_jr_jelly_diss', source: 'jr', target: 'jelly_roll_diss', relationship: 'Conflict', description: 'Target of the critical "Been Behind" authenticity challenge.', startYear: 2026 },
@@ -466,6 +488,82 @@ const RELATIONSHIP_THEMES: Record<string, { stroke: string; strokeWidth: number;
   'Audience Overlap': { stroke: '#d946ef', strokeWidth: 1.5, dashArray: '2,4' } // Magenta fine dots
 };
 
+interface MatrixRow {
+  target: string;
+  nodeId: string;
+  faction: string;
+  media: string;
+  partner: string;
+  weapon: string;
+  note: string;
+}
+
+const MASTER_MATRIX: MatrixRow[] = [
+  {
+    target: 'MoKoN (SeekingTheTruth)',
+    nodeId: 'mk',
+    faction: 'Self-Contained Independent',
+    media: 'Self-Operated',
+    partner: 'Ryan Upchurch & 2020 Defenders',
+    weapon: 'DAW-driven independent studio videos / Live Archive Exposés',
+    note: 'The OG Whistleblower: Called out Upchurch in 2020 while facing mass backlash from people who now copy his stance.'
+  },
+  {
+    target: 'Ryan Upchurch',
+    nodeId: 'ru',
+    faction: 'RHEC / Creeksquad',
+    media: 'Triple T',
+    partner: 'MoKoN / Adam Calhoun / Justin Time',
+    weapon: '30-Minute Livestreams / Diss Tracks',
+    note: 'The Monopoly: Used a massive fan wave to try to silence early critics like MoKoN before the scene turned.'
+  },
+  {
+    target: 'Adam Calhoun',
+    nodeId: 'ac',
+    faction: 'Independent',
+    media: 'SeekingTheTruth',
+    partner: 'Ryan Upchurch',
+    weapon: 'Calculated Call-out Vlogs',
+    note: 'Later-stage challenger who shifted away from the RHEC alliance.'
+  },
+  {
+    target: 'WhoTFisJustinTime',
+    nodeId: 'jt',
+    faction: 'Independent',
+    media: 'SeekingTheTruth',
+    partner: 'RHEC Crew',
+    weapon: 'Behind-the-scenes Contract Exposés',
+    note: 'Exposed infrastructure flaws that validated MoKoN\'s early reports.'
+  },
+  {
+    target: 'Johnny Gobble (Dagburn)',
+    nodeId: 'jg',
+    faction: 'Underground',
+    media: 'Commercial Hick-Hop Acts',
+    partner: 'Dagburn Nation',
+    weapon: '"Brutal Honesty" Vlogs / Acapella Bars',
+    note: 'Anti-industry voice operating parallel to MoKoN’s independent ethos.'
+  },
+  {
+    target: 'Reaper7Man',
+    nodeId: 'r7',
+    faction: 'Dark Trap Outlaws',
+    media: 'Independent',
+    partner: 'Ryan Upchurch',
+    weapon: 'Underground Diss Audio Tracks',
+    note: 'Direct sonic challenger targeting the RHEC hierarchy.'
+  },
+  {
+    target: 'Triple T',
+    nodeId: 'tt',
+    faction: 'Independent News',
+    media: 'Self',
+    partner: 'Faction Fanbases',
+    weapon: 'Narrative Breakdown Videos',
+    note: 'Mainstream scene tracker that documented the fallout of MoKoN\'s early exposures. Crucially, Triple T and his community members were some of the most malicious and toxic trolls inside Creek Squad, defending Ryan fiercely against MoKoN.'
+  }
+];
+
 export default function Investigation() {
   // SVG and Container refs for D3 graph positioning
   const svgRef = useRef<SVGSVGElement>(null);
@@ -484,6 +582,7 @@ export default function Investigation() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedNode, setSelectedNode] = useState<SimulationNode | null>(null);
   const [selectedLink, setSelectedLink] = useState<SimulationLink | null>(null);
+  const [showMatrix, setShowMatrix] = useState<boolean>(false);
 
   // Path Finder states
   const [pathSource, setPathSource] = useState<string>('');
@@ -932,6 +1031,14 @@ export default function Investigation() {
           <span className="hidden lg:inline text-[9px] text-zinc-600 tracking-wider">
             NODES ACTIVE: {processedNodes.length}/{INITIAL_NODES.length}
           </span>
+          <button 
+            onClick={() => setShowMatrix(true)}
+            className="flex items-center gap-1.5 px-3 py-1 bg-blue-950/25 border border-blue-900/30 hover:bg-blue-600/30 hover:text-white text-blue-400 text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer"
+            title="Open Cross-Reference Master Conflict Matrix Layout"
+          >
+            <Scale size={11} />
+            <span>MASTER MATRIX</span>
+          </button>
           <button 
             onClick={handleUnpinAll}
             className="flex items-center gap-1.5 px-3 py-1 bg-red-950/20 border border-red-900/30 hover:bg-brand hover:border-brand text-brand hover:text-white text-[9px] font-bold uppercase transition-all rounded-sm cursor-pointer"
@@ -1690,6 +1797,99 @@ export default function Investigation() {
         </AnimatePresence>
 
       </div>
+
+      {/* Master Matrix Overlay Modal */}
+      <AnimatePresence>
+        {showMatrix && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4 md:p-8"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="w-full max-w-6xl bg-zinc-950 border border-white/10 rounded-sm shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+            >
+              {/* Header */}
+              <div className="flex justify-between items-center bg-zinc-900 px-6 py-4 border-b border-white/5">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-600/10 border border-blue-500/20 rounded-sm">
+                    <Scale size={18} className="text-blue-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-white text-xs font-black uppercase tracking-widest font-mono">CROSS-REFERENCE MATRIX</h2>
+                    <p className="text-[9px] text-zinc-500 font-mono tracking-wider">CHRONOLOGICAL TARGET INTELLIGENCE MAPPING MATRIX</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => setShowMatrix(false)}
+                  className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 hover:text-white border border-white/5 text-zinc-400 text-[10px] font-mono rounded-sm transition-all cursor-pointer"
+                >
+                  [ ESCAPE_SYSTEM ]
+                </button>
+              </div>
+
+              {/* Description Callout */}
+              <div className="bg-blue-600/5 border-b border-blue-500/10 px-6 py-3 font-mono text-[9.5px] text-blue-300 leading-normal">
+                ⚔️ This master intelligence matrix tracks targeted conflicts, digital faction positions, and content platforms utilized within the Country Rap space from 2018 to the present. All listed points correspond to real public record entries on the active digital timeline. Select any target row to snap-focus gravity coordinates directly to their active node.
+              </div>
+
+              {/* Table Container */}
+              <div className="flex-1 overflow-auto p-6 no-scrollbar">
+                <table className="w-full border-collapse font-sans text-[11px] text-left">
+                  <thead>
+                    <tr className="border-b border-white/10 text-zinc-500 font-mono text-[9px] uppercase tracking-wider">
+                      <th className="py-2 px-3 font-bold">Target</th>
+                      <th className="py-2 px-3 font-bold">Primary Faction</th>
+                      <th className="py-2 px-3 font-bold">Media Node</th>
+                      <th className="py-2 px-3 font-bold">Conflict Partner</th>
+                      <th className="py-2 px-3 font-bold font-mono text-[9px]">Weapon / Format</th>
+                      <th className="py-2 px-3 font-bold">Historical Role Note</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {MASTER_MATRIX.map((row, index) => (
+                      <tr 
+                        key={index}
+                        onClick={() => {
+                          const matchingNode = INITIAL_NODES.find(n => n.id === row.nodeId);
+                          if (matchingNode) {
+                            setSelectedNode(matchingNode as SimulationNode);
+                          }
+                          setShowMatrix(false);
+                        }}
+                        className="border-b border-white/5 hover:bg-zinc-900/60 transition-colors cursor-pointer group"
+                      >
+                        <td className="py-3 px-3">
+                          <span className="font-mono text-[10px] font-black text-white group-hover:text-blue-400 transition-colors flex items-center gap-1.5 leading-none">
+                            <span className="w-1 h-3 bg-blue-500/50 rounded-sm inline-block"></span>
+                            {row.target}
+                          </span>
+                        </td>
+                        <td className="py-3 px-3 text-zinc-300 font-mono text-[10px] leading-none uppercase">{row.faction}</td>
+                        <td className="py-3 px-3 text-zinc-400 font-mono text-[10px] leading-none uppercase">{row.media}</td>
+                        <td className="py-3 px-3 text-red-400/80 font-mono text-[10px] leading-none">{row.partner}</td>
+                        <td className="py-3 px-3 text-zinc-500 font-light font-sans">{row.weapon}</td>
+                        <td className="py-3 px-3 text-zinc-400 font-sans leading-normal font-light italic max-w-xs">{row.note}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Footer */}
+              <div className="bg-zinc-900 px-6 py-3 border-t border-white/5 flex justify-between items-center text-[8px] font-mono text-zinc-650 uppercase">
+                <span>INTEL DATABASE ENCRYPTION: G-26.C</span>
+                <span>Select a node row to navigate mapping map</span>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

@@ -168,3 +168,59 @@ export interface UserAnnotation {
   votes: number;
 }
 
+export interface Artist {
+  id: string;
+  name: string;
+  email: string;
+  bio: string;
+  shortBio: string;
+  profilePicture: string;
+  bannerImage: string;
+  genres: string[];
+  location?: string;
+  verificationStatus: 'community' | 'verified' | 'unverified';
+  links: {
+    youtube?: string;
+    spotify?: string;
+    appleMusic?: string;
+    soundcloud?: string;
+    tiktok?: string;
+    instagram?: string;
+    facebook?: string;
+    twitter?: string;
+    website?: string;
+  };
+  featuredSong?: {
+    title: string;
+    link: string;
+  };
+  featuredAlbum?: {
+    title: string;
+    link: string;
+  };
+  featuredVideo?: {
+    title: string;
+    link: string;
+  };
+  status: 'pending' | 'approved' | 'rejected' | 'changes_requested';
+  adminNotes?: string;
+  metrics: {
+    views: number;
+    clicks: number;
+    followerCount: number;
+    favoritesCount: number;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ArtistUpdate {
+  id: string;
+  artistId: string;
+  artistName: string;
+  type: 'profile_created' | 'profile_updated' | 'music_added';
+  description: string;
+  createdAt: string;
+}
+
+

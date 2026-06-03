@@ -185,9 +185,58 @@
         "votes": { "type": "number" }
       },
       "required": ["streamId", "timestamp", "timestampSeconds", "text"]
+    },
+    "Artist": {
+      "title": "Artist",
+      "description": "An independent artist profile in the directory.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "bio": { "type": "string" },
+        "shortBio": { "type": "string" },
+        "profilePicture": { "type": "string" },
+        "bannerImage": { "type": "string" },
+        "genres": { "type": "array", "items": { "type": "string" } },
+        "location": { "type": "string" },
+        "verificationStatus": { "type": "string", "enum": ["community", "verified", "unverified"] },
+        "links": { "type": "object" },
+        "featuredSong": { "type": "object" },
+        "featuredAlbum": { "type": "object" },
+        "featuredVideo": { "type": "object" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "changes_requested"] },
+        "adminNotes": { "type": "string" },
+        "metrics": { "type": "object" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "email", "bio", "genres", "status"]
+    },
+    "ArtistUpdate": {
+      "title": "ArtistUpdate",
+      "description": "An activity log of an approved artist profile change.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "artistId": { "type": "string" },
+        "artistName": { "type": "string" },
+        "type": { "type": "string", "enum": ["profile_created", "profile_updated", "music_added"] },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["artistId", "artistName", "type", "description", "createdAt"]
     }
   },
   "firestore": {
+    "artists": {
+      "schema": "Artist",
+      "description": "Public and pending directory of independent artists."
+    },
+    "artist_updates": {
+      "schema": "ArtistUpdate",
+      "description": "Timeline of updates matching artists followed by visitors."
+    },
     "creators": {
       "schema": "Creator",
       "description": "Public database of creators."
